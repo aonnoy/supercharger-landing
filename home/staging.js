@@ -1,4 +1,4 @@
-import { loadStylesheet, loadScript } from "https://supercharger-staging.vercel.app/external-script-loader.js";
+import { loadStylesheet, loadScript } from "https://supercharger-staging.vercel.app/utilities/external-script-loader.js";
 
 // Load Swiper CSS
 loadStylesheet(
