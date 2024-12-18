@@ -1,4 +1,4 @@
-import { loadStylesheet, loadScript } from "./external-script-loader.js";
+import { loadStylesheet, loadScript } from "https://html-starter-ecru-phi.vercel.app/external-script-loader.js";
 
 // Load Swiper CSS
 loadStylesheet(
@@ -13,6 +13,6 @@ loadScript(
   "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
   () => {
     console.log("Swiper JS loaded!");
-    // Initialize Swiper here
+    // Initialize Swiper here if needed
   }
 );
