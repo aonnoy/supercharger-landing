@@ -1,26 +1,30 @@
-function loadDynamicScript(src, callback) {
+// Function to dynamically load a JavaScript file
+function loadDynamicScript(src, callback, isModule = false) {
   const script = document.createElement("script");
   script.src = src;
-   // Treat the script as a module if needed
+
+  // Treat the script as a module if needed
   if (isModule) {
     script.type = "module";
   }
+
   script.onload = callback || (() => console.log(`Script loaded: ${src}`));
   script.onerror = () => console.error(`Failed to load script: ${src}`);
   document.head.appendChild(script);
 }
 
-// Check the origin and load the appropriate script
-const origin = window.location.origin;
+// Dynamically decide which script to load
+const origin = window.location.hostname;
+const baseURL = `https://html-starter-ecru-phi.vercel.app/home/`;
 
 if (origin.includes("webflow.io")) {
-  // Load staging script
-  loadDynamicScript("https://html-starter-ecru-phi.vercel.app/home/staging.js", () => {
+  // Load staging script as a module
+  loadDynamicScript(`${baseURL}staging.js`, () => {
     console.log("Loaded staging script");
-  });
+  }, true);
 } else {
-  // Load production script
-  loadDynamicScript("https://html-starter-ecru-phi.vercel.app/home/production.js", () => {
+  // Load production script as a module
+  loadDynamicScript(`${baseURL}production.js`, () => {
     console.log("Loaded production script");
-  });
+  }, true);
 }
