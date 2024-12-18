@@ -1,6 +1,10 @@
 function loadDynamicScript(src, callback) {
   const script = document.createElement("script");
   script.src = src;
+   // Treat the script as a module if needed
+  if (isModule) {
+    script.type = "module";
+  }
   script.onload = callback || (() => console.log(`Script loaded: ${src}`));
   script.onerror = () => console.error(`Failed to load script: ${src}`);
   document.head.appendChild(script);
