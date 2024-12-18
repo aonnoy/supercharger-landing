@@ -1,4 +1,3 @@
-// Function to dynamically load a JavaScript file
 function loadDynamicScript(src, callback) {
   const script = document.createElement("script");
   script.src = src;
@@ -7,18 +6,17 @@ function loadDynamicScript(src, callback) {
   document.head.appendChild(script);
 }
 
-
-// Check the origin and decide which script to load
+// Check the origin and load the appropriate script
 const origin = window.location.origin;
 
 if (origin.includes("webflow.io")) {
-  // Load the staging script
-loadDynamicScript("/home/staging.js", () => {
-  console.log("Loaded staging script");
-});
+  // Load staging script
+  loadDynamicScript("https://html-starter-ecru-phi.vercel.app/home/staging.js", () => {
+    console.log("Loaded staging script");
+  });
 } else {
-  // Load the production script
-loadDynamicScript("/home/production.js", () => {
-  console.log("Loaded production script");
-});
+  // Load production script
+  loadDynamicScript("https://html-starter-ecru-phi.vercel.app/home/production.js", () => {
+    console.log("Loaded production script");
+  });
 }
