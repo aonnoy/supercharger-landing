@@ -13,9 +13,11 @@ function loadDynamicScript(src, callback, isModule = false) {
   document.head.appendChild(script);
 }
 
-// Dynamically decide which script to load
+// Set the base URL explicitly
+const baseURL = "https://html-starter-ecru-phi.vercel.app/home/";
+
+// Check the hostname and load the appropriate script
 const origin = window.location.hostname;
-const baseURL = `https://html-starter-ecru-phi.vercel.app/home/`;
 
 if (origin.includes("webflow.io")) {
   // Load staging script as a module
