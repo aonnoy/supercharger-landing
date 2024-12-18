@@ -1,4 +1,4 @@
-import { loadStylesheet, loadScript } from "./swiper-js-loader.js";
+import { loadStylesheet, loadScript } from "./external-script-loader.js";
 
 // Load Swiper CSS
 loadStylesheet(
