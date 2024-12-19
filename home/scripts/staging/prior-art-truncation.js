@@ -40,19 +40,17 @@ window.Wized.push((Wized) => {
             const truncatedText = truncateText(originalText);
             const isTruncated = originalText.length > 256;
 
-            // Update the content text and link text
+            state.set(content, { expanded: false, originalText, truncatedText });
+
+            // Set initial content and link text
             content.textContent = isTruncated ? truncatedText : originalText;
             link.textContent = isTruncated ? "View More" : "";
 
-            // Update the state
-            state.set(content, { expanded: false, originalText, truncatedText });
+            // Remove any existing listener to avoid duplication
+            link.removeEventListener("click", handleClick);
 
-            // Remove existing listeners before adding a new one
-            link.replaceWith(link.cloneNode(true)); // Clone the link to remove all existing listeners
-            const newLink = links[index]; // Retrieve the new link element after cloning
-
-            // Attach a click listener to the new link
-            newLink.addEventListener("click", () => {
+            // Define the click handler
+            const handleClick = () => {
                 const currentState = state.get(content);
 
                 if (!currentState) {
@@ -63,16 +61,19 @@ window.Wized.push((Wized) => {
                 // Toggle expanded/collapsed state
                 if (currentState.expanded) {
                     content.textContent = currentState.truncatedText;
-                    newLink.textContent = "View More";
+                    link.textContent = "View More";
                 } else {
                     content.textContent = currentState.originalText;
-                    newLink.textContent = "View Less";
+                    link.textContent = "View Less";
                 }
 
                 currentState.expanded = !currentState.expanded;
                 state.set(content, currentState);
                 console.log(`Updated state for ${logLabel} at index ${index}:`, currentState);
-            });
+            };
+
+            // Attach the click handler
+            link.addEventListener("click", handleClick);
         });
     };
 
