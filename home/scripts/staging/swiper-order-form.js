@@ -16,10 +16,10 @@ loadScript(
 
     // Initialize Swiper
     const swiper = new Swiper('.swiper', {
-      // Optional parameters
-      loop: true, // Enable looping of slides
-      slidesPerView: 1, // Number of slides visible at once
-      spaceBetween: 10, // Space between slides in pixels
+      // Optional parameters for multistep form
+      loop: false, // No looping for a multistep form
+      slidesPerView: 1, // Show one step at a time
+      spaceBetween: 0, // No spacing between slides
 
       // Navigation arrows
       navigation: {
@@ -27,6 +27,7 @@ loadScript(
         prevEl: '.swiper-button-prev',
       },
     });
-    console.log("Swiper initialized!");
+
+    console.log("Swiper initialized for multistep form!");
   }
 );
