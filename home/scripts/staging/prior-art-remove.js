@@ -43,18 +43,15 @@ window.Wized.push((Wized) => {
     const initializeRemoveListeners = () => {
         console.log("Initializing listeners for patent removal elements...");
 
-        // Get all elements with the specified wized attribute
         const removeButtons = document.querySelectorAll('[wized="home_orderForm_priorArtPreview_patentRemove"]');
 
         removeButtons.forEach((button) => {
-            // Ensure the button has a publication-number attribute
             const publicationNumber = button.getAttribute("publication-number");
             if (!publicationNumber) {
                 console.warn("Remove button is missing the publication-number attribute. Skipping...");
                 return;
             }
 
-            // Check if the listener is already attached to avoid duplication
             if (!button.dataset.listenerAttached) {
                 console.log(`Attaching listener to button with publication-number: ${publicationNumber}`);
 
@@ -77,8 +74,17 @@ window.Wized.push((Wized) => {
 
                     if (selectedPatents.length < initialLength) {
                         console.log(`Removed object with publication-number: ${publicationNumber}`);
+
                         // Update the input field after removal
                         updateSelectedPatentsInput(publicationNumber);
+
+                        // Reapply truncation listeners
+                        if (window.initializeTruncationListeners) {
+                            console.log("Reapplying truncation listeners...");
+                            window.initializeTruncationListeners();
+                        } else {
+                            console.error("Truncation listener function not found!");
+                        }
                     } else {
                         console.warn(`No matching object found for publication-number: ${publicationNumber}`);
                     }
@@ -89,7 +95,6 @@ window.Wized.push((Wized) => {
                     console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", selectedPatents);
                 });
 
-                // Mark the button to indicate that a listener is attached
                 button.dataset.listenerAttached = true;
             }
         });
@@ -102,13 +107,11 @@ window.Wized.push((Wized) => {
         if (event.name === "searchByPatentNumber3") {
             console.log("Detected execution of searchByPatentNumber3 request. Reinitializing remove listeners...");
             setTimeout(() => {
-                initializeRemoveListeners(); // Reinitialize listeners after new elements are added to the DOM
-            }, 100); // Slight delay to ensure DOM updates are complete
+                initializeRemoveListeners();
+            }, 100);
         }
     });
 
-    // Initial setup
     console.log("Setting up initial remove listeners...");
     initializeRemoveListeners();
 });
-
