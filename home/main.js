@@ -19,7 +19,7 @@ const baseURL = "https://supercharger-staging.vercel.app/";
 // Check the hostname and load the appropriate script
 const origin = window.location.hostname;
 
-if (origin.includes("webflow.io")) {
+if (origin.includes("webflow.io") || origin.includes("server.wized.com")) {
   // Load staging script as a module
   loadDynamicScript(`${baseURL}home/staging.js`, () => {
     console.log("Loaded staging script");
