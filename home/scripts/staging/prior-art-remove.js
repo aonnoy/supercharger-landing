@@ -48,6 +48,14 @@ window.Wized.push((Wized) => {
                     Wized.data.v.home_orderForm_priorArtPreview_selectedPatents = selectedPatents;
 
                     console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", selectedPatents);
+
+                    // Reapply the truncation logic after removing the object
+                    if (typeof initializeListeners === "function") {
+                        console.log("Reapplying truncation logic...");
+                        initializeListeners();
+                    } else {
+                        console.warn("Truncation logic function is not defined. Ensure it's loaded.");
+                    }
                 });
 
                 // Mark the button to indicate that a listener is attached
