@@ -40,14 +40,19 @@ window.Wized.push((Wized) => {
             const truncatedText = truncateText(originalText);
             const isTruncated = originalText.length > 256;
 
-            state.set(content, { expanded: false, originalText, truncatedText });
-
-            // Set initial content and link text
+            // Update the content text and link text
             content.textContent = isTruncated ? truncatedText : originalText;
             link.textContent = isTruncated ? "View More" : "";
 
-            // Attach a click listener
-            link.addEventListener("click", () => {
+            // Update the state
+            state.set(content, { expanded: false, originalText, truncatedText });
+
+            // Remove existing listeners before adding a new one
+            link.replaceWith(link.cloneNode(true)); // Clone the link to remove all existing listeners
+            const newLink = links[index]; // Retrieve the new link element after cloning
+
+            // Attach a click listener to the new link
+            newLink.addEventListener("click", () => {
                 const currentState = state.get(content);
 
                 if (!currentState) {
@@ -58,10 +63,10 @@ window.Wized.push((Wized) => {
                 // Toggle expanded/collapsed state
                 if (currentState.expanded) {
                     content.textContent = currentState.truncatedText;
-                    link.textContent = "View More";
+                    newLink.textContent = "View More";
                 } else {
                     content.textContent = currentState.originalText;
-                    link.textContent = "View Less";
+                    newLink.textContent = "View Less";
                 }
 
                 currentState.expanded = !currentState.expanded;
@@ -91,32 +96,16 @@ window.Wized.push((Wized) => {
     };
 
     /**
-     * Function to reapply truncation when a remove button is clicked.
-     */
-    const setupRemoveButtonListener = () => {
-        console.log("Setting up listener for retruncation on remove button clicks...");
-
-        document.addEventListener("click", (event) => {
-            const removeButton = event.target.closest('[wized="home_orderForm_priorArtPreview_patentRemove"]');
-            if (removeButton) {
-                console.log("Remove button clicked. Reapplying truncation logic...");
-                setTimeout(() => initializeListeners(), 100); // Delay to ensure DOM updates
-            }
-        });
-    };
-
-    /**
      * Listen for the execution of the searchByPatentNumber3 request and reinitialize listeners.
      */
     Wized.on("request", (event) => {
         if (event.name === "searchByPatentNumber3") {
             console.log("Detected execution of searchByPatentNumber3 request. Reinitializing listeners...");
-            setTimeout(() => initializeListeners(), 100);
+            setTimeout(() => initializeListeners(), 100); // Slight delay to ensure DOM updates are complete
         }
     });
 
     // Initial setup
     console.log("Setting up initial listeners...");
     initializeListeners();
-    setupRemoveButtonListener();
 });
