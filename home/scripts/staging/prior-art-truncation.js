@@ -1,6 +1,6 @@
 window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
-    const state = new Map();
+    const state = new Map(); // Map to keep track of expanded elements
 
     /**
      * Function to truncate text if it exceeds 256 characters.
@@ -17,7 +17,7 @@ window.Wized.push((Wized) => {
      * @param {string} logLabel - Label for logging (e.g., "abstract" or "claims").
      */
     const processElements = (contentSelector, linkSelector, logLabel) => {
-        console.log(`Initializing listeners for ${logLabel} elements...`);
+        console.log(`Processing ${logLabel} elements for truncation...`);
 
         const contents = document.querySelectorAll(`[wized="${contentSelector}"]`);
         const links = document.querySelectorAll(`[wized="${linkSelector}"]`);
@@ -35,46 +35,49 @@ window.Wized.push((Wized) => {
                 return;
             }
 
-            if (!state.has(content)) {
-                console.log(`Setting up ${logLabel} and its link at index ${index}.`);
+            // Reset or set the state
+            const originalText = content.textContent;
+            const truncatedText = truncateText(originalText);
+            const isTruncated = originalText.length > 256;
 
-                const originalText = content.textContent;
-                const truncatedText = truncateText(originalText);
-                const isTruncated = originalText.length > 256;
+            state.set(content, { expanded: false, originalText, truncatedText });
 
-                content.textContent = isTruncated ? truncatedText : originalText;
-                state.set(content, { expanded: false, originalText, truncatedText });
+            // Set initial content and link text
+            content.textContent = isTruncated ? truncatedText : originalText;
+            link.textContent = isTruncated ? "View More" : "";
 
-                link.textContent = isTruncated ? "View More" : "";
+            // Attach a click listener
+            link.addEventListener("click", () => {
+                const currentState = state.get(content);
 
-                link.addEventListener("click", () => {
-                    const currentState = state.get(content);
+                if (!currentState) {
+                    console.error(`No state found for ${logLabel} element at index ${index}.`);
+                    return;
+                }
 
-                    if (!currentState) {
-                        console.error(`No state found for ${logLabel} element. This should not happen.`);
-                        return;
-                    }
+                // Toggle expanded/collapsed state
+                if (currentState.expanded) {
+                    content.textContent = currentState.truncatedText;
+                    link.textContent = "View More";
+                } else {
+                    content.textContent = currentState.originalText;
+                    link.textContent = "View Less";
+                }
 
-                    if (currentState.expanded) {
-                        content.textContent = currentState.truncatedText;
-                        link.textContent = "View More";
-                    } else {
-                        content.textContent = currentState.originalText;
-                        link.textContent = "View Less";
-                    }
-
-                    currentState.expanded = !currentState.expanded;
-                    state.set(content, currentState);
-                    console.log(`Updated state for ${logLabel} at index ${index}:`, currentState);
-                });
-            }
+                currentState.expanded = !currentState.expanded;
+                state.set(content, currentState);
+                console.log(`Updated state for ${logLabel} at index ${index}:`, currentState);
+            });
         });
     };
 
     /**
      * Function to initialize listeners for all target elements.
+     * Clears the state to ensure fresh processing.
      */
     const initializeListeners = () => {
+        console.log("Initializing truncation listeners...");
+        state.clear(); // Clear previous state to avoid stale references
         processElements(
             "home_orderForm_priorArtPreview_patentAbstract",
             "home_orderForm_priorArtPreview_patentAbstractReadMore",
@@ -91,13 +94,13 @@ window.Wized.push((Wized) => {
      * Function to reapply truncation when a remove button is clicked.
      */
     const setupRemoveButtonListener = () => {
-        console.log("Setting up listeners for retruncation on remove button clicks...");
+        console.log("Setting up listener for retruncation on remove button clicks...");
 
         document.addEventListener("click", (event) => {
             const removeButton = event.target.closest('[wized="home_orderForm_priorArtPreview_patentRemove"]');
             if (removeButton) {
                 console.log("Remove button clicked. Reapplying truncation logic...");
-                initializeListeners();
+                setTimeout(() => initializeListeners(), 100); // Delay to ensure DOM updates
             }
         });
     };
@@ -108,11 +111,15 @@ window.Wized.push((Wized) => {
     Wized.on("request", (event) => {
         if (event.name === "searchByPatentNumber3") {
             console.log("Detected execution of searchByPatentNumber3 request. Reinitializing listeners...");
-            setTimeout(() => {
-                initializeListeners(); // Reinitialize listeners after new elements are added to the DOM
-            }, 100);
+            setTimeout(() => initializeListeners(), 100);
         }
     });
+
+    // Initial setup
+    console.log("Setting up initial listeners...");
+    initializeListeners();
+    setupRemoveButtonListener();
+});
 
     // Initial setup
     console.log("Setting up initial listeners...");
