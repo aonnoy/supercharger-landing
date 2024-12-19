@@ -48,6 +48,9 @@ Promise.all([
               loop: false, // No looping for a multistep form
               slidesPerView: 1, // Show one step at a time
               spaceBetween: 0, // No spacing between slides
+              
+              // Prevent manual swiping
+              allowTouchMove: false,
 
               // Enable autoHeight to adjust based on content
               autoHeight: true,
@@ -65,7 +68,7 @@ Promise.all([
               },
             });
 
-            console.log("Swiper initialized successfully for multistep form.");
+            console.log("Swiper initialized successfully for multistep form with manual swiping disabled.");
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -78,4 +81,5 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
+
 
