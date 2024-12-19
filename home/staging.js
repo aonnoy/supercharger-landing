@@ -7,3 +7,9 @@ console.log('Swiper order form script loaded!');
 // HAS THE COMBO CLASS OF "is-active" ADDED TO IT
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/product-selection-radio-hover.js';
 console.log('Product selection hover and clicked Function is loaded');
+
+
+// THIS SCRIPT ENSURES THAT WHEN HOVERING/CLICKING OVER PRODUCT SELECTION RADIO'S THE "LABEL" INSIDE IT
+// HAS THE COMBO CLASS OF "is-active" ADDED TO IT
+import 'https://supercharger-staging.vercel.app/home/scripts/staging/search-add-patent.js';
+console.log('Search add patent function is loaded');
