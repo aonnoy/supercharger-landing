@@ -69,6 +69,25 @@ Promise.all([
             });
 
             console.log("Swiper initialized successfully for multistep form with manual swiping disabled.");
+
+            // Observe changes in the slider's content
+            const sliderWrapper = document.querySelector('.order-form_wrapper .swiper-wrapper');
+            if (sliderWrapper) {
+              const observer = new MutationObserver(() => {
+                console.log("Detected changes in the slider content. Updating Swiper height...");
+                swiper.updateAutoHeight(0); // Update the height immediately
+              });
+
+              observer.observe(sliderWrapper, {
+                childList: true, // Watch for added/removed child elements
+                subtree: true,  // Watch all descendants
+                attributes: true, // Watch attribute changes
+              });
+
+              console.log("MutationObserver set up for dynamic content changes.");
+            } else {
+              console.error("Swiper wrapper not found. MutationObserver not set up.");
+            }
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -81,5 +100,3 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
-
-
