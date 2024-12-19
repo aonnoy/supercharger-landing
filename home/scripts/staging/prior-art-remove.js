@@ -1,6 +1,43 @@
 window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
     /**
+     * Function to update the input after a publication_number is removed.
+     * @param {string} publicationNumberToRemove - The publication_number to remove from the input.
+     */
+    const updateSelectedPatentsInput = (publicationNumberToRemove) => {
+        console.log(`Removing publication_number: ${publicationNumberToRemove} from the input...`);
+
+        // Target the input element
+        const inputElement = document.querySelector('[wized="home_orderForm_selectedPatentsInput"]');
+
+        if (!inputElement) {
+            console.error('Input element with wized="home_orderForm_selectedPatentsInput" not found.');
+            return;
+        }
+
+        // Get the current value of the input
+        let currentValue = inputElement.value;
+
+        // Split the current value into an array and trim whitespace
+        const currentValues = currentValue
+            ? currentValue.split(",").map((value) => value.trim())
+            : [];
+
+        // Remove the specified publication_number from the array
+        const updatedValues = currentValues.filter((value) => value !== publicationNumberToRemove);
+
+        // Update the input value
+        const updatedValueString = updatedValues.join(", ");
+        inputElement.value = updatedValueString;
+
+        // Trigger an input event to ensure Wized detects the change
+        const event = new Event("input", { bubbles: true });
+        inputElement.dispatchEvent(event);
+
+        console.log(`Updated input value after removal: ${updatedValueString}`);
+    };
+
+    /**
      * Function to attach click listeners to "Remove" elements.
      */
     const initializeRemoveListeners = () => {
@@ -40,6 +77,8 @@ window.Wized.push((Wized) => {
 
                     if (selectedPatents.length < initialLength) {
                         console.log(`Removed object with publication-number: ${publicationNumber}`);
+                        // Update the input field after removal
+                        updateSelectedPatentsInput(publicationNumber);
                     } else {
                         console.warn(`No matching object found for publication-number: ${publicationNumber}`);
                     }
@@ -72,3 +111,4 @@ window.Wized.push((Wized) => {
     console.log("Setting up initial remove listeners...");
     initializeRemoveListeners();
 });
+
