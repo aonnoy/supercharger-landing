@@ -24,5 +24,17 @@ radioButtons.forEach((radioButton) => {
       // Always remove the 'is-active' class when the cursor leaves
       radioLabel.classList.remove('is-active');
     });
+
+    // Click event to handle selection
+    radioButton.addEventListener('click', () => {
+      // Remove 'is-active' class from all labels
+      radioButtons.forEach((btn) => {
+        const label = btn.querySelector('.product-selection_radio-label');
+        label.classList.remove('is-active');
+      });
+
+      // Add 'is-active' class to the clicked button's label
+      radioLabel.classList.add('is-active');
+    });
   }
 });
