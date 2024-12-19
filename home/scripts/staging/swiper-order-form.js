@@ -15,7 +15,7 @@ loadScript(
     console.log("Swiper JS loaded!");
 
     // Initialize Swiper
-    const swiper = new Swiper('.swiper', {
+    const swiper = new Swiper('.order-form_wrapper', {
       // Optional parameters for multistep form
       loop: false, // No looping for a multistep form
       slidesPerView: 1, // Show one step at a time
