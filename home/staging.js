@@ -8,17 +8,14 @@ console.log('Swiper order form script loaded!');
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/product-selection-radio-hover.js';
 console.log('Product selection hover and clicked Function is loaded');
 
-
-
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/search-add-patent.js';
 console.log('Search add patent function is loaded');
-
-
 
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/prior-art-preview-set-variable.js';
 console.log('Set Prior art Preview variable function is loaded');
 
-
-
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/prior-art-truncation.js';
-console.log('Set Prior art Preview variable function is loaded');
+console.log('Prior Art Truncation function is loaded');
+
+import 'https://supercharger-staging.vercel.app/home/scripts/staging/prior-art-remove.js';
+console.log('Prior art remove function is loaded');
