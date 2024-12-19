@@ -1,11 +1,5 @@
 import { loadStylesheet, loadScript } from "https://supercharger-staging.vercel.app/utilities/external-script-loader.js";
-
-// Function to inject custom CSS
-function addCustomStyles(css) {
-  const style = document.createElement('style');
-  style.textContent = css;
-  document.head.appendChild(style);
-}
+import { addCustomStyles } from "https://supercharger-staging.vercel.app/utilities/custom-css.js";
 
 // Add custom CSS for Swiper navigation buttons
 addCustomStyles(`
