@@ -26,20 +26,7 @@ loadScript(
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
       },
-
-      // Pagination (optional, remove if not needed)
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-
-      // Enable autoplay (optional, remove if not needed)
-      autoplay: {
-        delay: 3000, // Time in ms
-        disableOnInteraction: false,
-      },
     });
-
     console.log("Swiper initialized!");
   }
 );
