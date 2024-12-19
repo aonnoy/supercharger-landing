@@ -26,26 +26,28 @@ window.Wized.push((Wized) => {
                     }
 
                     const initialLength = selectedPatents.length;
-                    selectedPatents = selectedPatents.filter(
+                    const updatedPatents = selectedPatents.filter(
                         (patent) => patent["publication_number"] !== publicationNumber
                     );
 
-                    if (selectedPatents.length < initialLength) {
+                    if (updatedPatents.length < initialLength) {
                         console.log(`Removed object with publication-number: ${publicationNumber}`);
                     } else {
                         console.warn(`No matching object found for publication-number: ${publicationNumber}`);
                     }
 
-                    Wized.data.v.home_orderForm_priorArtPreview_selectedPatents = selectedPatents;
+                    Wized.data.v.home_orderForm_priorArtPreview_selectedPatents = updatedPatents;
 
-                    console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", selectedPatents);
+                    console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", updatedPatents);
 
-                    // Reapply the truncation logic after removing the object
-                    if (window.initializeListeners) {
+                    // Avoid redundant reinitialization
+                    if (updatedPatents.length !== initialLength) {
                         console.log("Reapplying truncation logic...");
-                        window.initializeListeners();
-                    } else {
-                        console.warn("Truncation logic function is not defined. Ensure it's loaded.");
+                        if (window.initializeListeners) {
+                            window.initializeListeners();
+                        } else {
+                            console.warn("Truncation logic function is not defined. Ensure it's loaded.");
+                        }
                     }
                 });
 
