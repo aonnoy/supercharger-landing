@@ -1,5 +1,5 @@
 // Import the BASE_URL constant
-import { BASE_URL } from './utlities/base-url.js';
+import { BASE_URL } from '.utilities/base-url.js';
 
 // Construct the full URL
 const swiperOrderFormUrl = `${BASE_URL}/home/scripts/staging/swiper-order-form.js`;
