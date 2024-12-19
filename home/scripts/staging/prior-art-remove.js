@@ -35,7 +35,7 @@ window.Wized.push((Wized) => {
                     // Find and remove the object with the matching publication-number
                     const initialLength = selectedPatents.length;
                     selectedPatents = selectedPatents.filter(
-                        (patent) => patent["publication-number"] !== publicationNumber
+                        (patent) => patent["publication_number"] !== publicationNumber
                     );
 
                     if (selectedPatents.length < initialLength) {
