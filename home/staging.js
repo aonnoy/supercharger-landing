@@ -19,3 +19,6 @@ console.log('Prior Art Truncation function is loaded');
 
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/prior-art-remove.js';
 console.log('Prior art remove function is loaded');
+
+import 'https://supercharger-staging.vercel.app/home/scripts/staging/selected-patent-input.js';
+console.log('Prior art remove function is loaded');
