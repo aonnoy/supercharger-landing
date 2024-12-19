@@ -44,50 +44,40 @@ Promise.all([
           // Initialize Swiper
           try {
             const swiper = new Swiper('.order-form_wrapper', {
-              // Optional parameters for multistep form
               loop: false, // No looping for a multistep form
               slidesPerView: 1, // Show one step at a time
               spaceBetween: 0, // No spacing between slides
               
-              // Prevent manual swiping
-              allowTouchMove: false,
+              allowTouchMove: false, // Prevent manual swiping
+              autoHeight: true, // Automatically adjust height based on content
 
-              // Enable autoHeight to adjust based on content
-              autoHeight: true,
-
-              // Enable fade effect
               effect: 'fade',
-              fadeEffect: {
-                crossFade: true, // Enable crossfade between slides
-              },
+              fadeEffect: { crossFade: true },
 
-              // Navigation arrows
               navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
               },
             });
 
-            console.log("Swiper initialized successfully for multistep form with manual swiping disabled.");
+            console.log("Swiper initialized successfully with manual swiping disabled.");
 
-            // Observe changes in the slider's content
-            const sliderWrapper = document.querySelector('.order-form_wrapper .swiper-wrapper');
-            if (sliderWrapper) {
+            // Observe changes in the Swiper slides
+            const swiperSlides = document.querySelectorAll('.order-form_wrapper .swiper-slide');
+            swiperSlides.forEach((slide, index) => {
               const observer = new MutationObserver(() => {
-                console.log("Detected changes in the slider content. Updating Swiper height...");
-                swiper.updateAutoHeight(0); // Update the height immediately
+                console.log(`Changes detected in slide ${index + 1}. Updating Swiper height...`);
+                swiper.updateAutoHeight(0); // Update Swiper height
               });
 
-              observer.observe(sliderWrapper, {
+              observer.observe(slide, {
                 childList: true, // Watch for added/removed child elements
-                subtree: true,  // Watch all descendants
-                attributes: true, // Watch attribute changes
+                attributes: true, // Watch for attribute changes
+                subtree: true, // Watch all descendants
               });
 
-              console.log("MutationObserver set up for dynamic content changes.");
-            } else {
-              console.error("Swiper wrapper not found. MutationObserver not set up.");
-            }
+              console.log(`MutationObserver set up for slide ${index + 1}.`);
+            });
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -100,3 +90,4 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
+
