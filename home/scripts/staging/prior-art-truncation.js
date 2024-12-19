@@ -2,10 +2,20 @@ window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
     const state = new Map();
 
+    /**
+     * Function to truncate text if it exceeds 256 characters.
+     * Adds a "..." at the end if truncated.
+     */
     const truncateText = (text, maxLength = 256) => {
         return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
     };
 
+    /**
+     * Function to process a group of elements and initialize truncation and toggle functionality.
+     * @param {string} contentSelector - Selector for the text element (e.g., abstract or claims).
+     * @param {string} linkSelector - Selector for the "View More/Less" link element.
+     * @param {string} logLabel - Label for logging (e.g., "abstract" or "claims").
+     */
     const processElements = (contentSelector, linkSelector, logLabel) => {
         console.log(`Initializing listeners for ${logLabel} elements...`);
 
@@ -61,6 +71,9 @@ window.Wized.push((Wized) => {
         });
     };
 
+    /**
+     * Function to initialize listeners for all target elements.
+     */
     const initializeListeners = () => {
         processElements(
             "home_orderForm_priorArtPreview_patentAbstract",
@@ -74,19 +87,36 @@ window.Wized.push((Wized) => {
         );
     };
 
+    /**
+     * Function to reapply truncation when a remove button is clicked.
+     */
+    const setupRemoveButtonListener = () => {
+        console.log("Setting up listeners for retruncation on remove button clicks...");
+
+        document.addEventListener("click", (event) => {
+            const removeButton = event.target.closest('[wized="home_orderForm_priorArtPreview_patentRemove"]');
+            if (removeButton) {
+                console.log("Remove button clicked. Reapplying truncation logic...");
+                initializeListeners();
+            }
+        });
+    };
+
+    /**
+     * Listen for the execution of the searchByPatentNumber3 request and reinitialize listeners.
+     */
     Wized.on("request", (event) => {
         if (event.name === "searchByPatentNumber3") {
             console.log("Detected execution of searchByPatentNumber3 request. Reinitializing listeners...");
             setTimeout(() => {
-                initializeListeners();
+                initializeListeners(); // Reinitialize listeners after new elements are added to the DOM
             }, 100);
         }
     });
 
+    // Initial setup
     console.log("Setting up initial listeners...");
     initializeListeners();
-
-    // Expose the function globally
-    window.initializeListeners = initializeListeners;
+    setupRemoveButtonListener();
 });
 
