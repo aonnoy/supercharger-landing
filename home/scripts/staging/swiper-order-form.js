@@ -22,7 +22,13 @@ loadScript(
       spaceBetween: 0, // No spacing between slides
 
       // Enable autoHeight to adjust based on content
-      autoHeight: true, 
+      autoHeight: true,
+
+      // Enable fade effect
+      effect: 'fade',
+      fadeEffect: {
+        crossFade: true, // Enable crossfade between slides
+      },
 
       // Navigation arrows
       navigation: {
