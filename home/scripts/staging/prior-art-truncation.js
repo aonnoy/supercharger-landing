@@ -120,10 +120,3 @@ window.Wized.push((Wized) => {
     initializeListeners();
     setupRemoveButtonListener();
 });
-
-    // Initial setup
-    console.log("Setting up initial listeners...");
-    initializeListeners();
-    setupRemoveButtonListener();
-});
-
