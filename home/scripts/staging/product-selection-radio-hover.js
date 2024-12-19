@@ -29,8 +29,16 @@ radioButtons.forEach((radioButton, index) => {
 
     // Mouseleave event
     radioButton.addEventListener('mouseleave', () => {
-      console.log(`Mouse left radio button ${index + 1}. Removing is-active class.`);
-      radioLabel.classList.remove('is-active');
+      console.log(`Mouse left radio button ${index + 1}.`);
+
+      // Check if the radio button is selected
+      const isSelected = radioButton.querySelector('.product-selection_radio-select').classList.contains('w--redirected-checked');
+
+      // Remove 'is-active' only if the radio button is not selected
+      if (!isSelected) {
+        console.log(`Removing is-active class from radio button ${index + 1}.`);
+        radioLabel.classList.remove('is-active');
+      }
     });
 
     // Click event to handle selection
