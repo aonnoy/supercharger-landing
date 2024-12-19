@@ -12,7 +12,7 @@ window.Wized.push((Wized) => {
     };
 
     /**
-     * Function to initialize listeners on elements with specified attributes.
+     * Function to initialize listeners for newly added elements.
      */
     const initializeListeners = () => {
         console.log("Initializing listeners for patent abstracts...");
@@ -38,6 +38,8 @@ window.Wized.push((Wized) => {
 
             // Check if this abstract has already been processed
             if (!state.has(abstract)) {
+                console.log(`Setting up abstract and read more link at index ${index}.`);
+
                 // Set initial truncated state
                 const originalText = abstract.textContent;
                 const truncatedText = truncateText(originalText);
@@ -49,33 +51,33 @@ window.Wized.push((Wized) => {
 
                 // Update the read more link text
                 readMoreLink.textContent = isTruncated ? "view more" : "";
+
+                // Attach click listener to the read more link
+                readMoreLink.addEventListener("click", () => {
+                    const currentState = state.get(abstract);
+
+                    if (!currentState) {
+                        console.error("No state found for abstract. This should not happen.");
+                        return;
+                    }
+
+                    // Toggle the expanded state
+                    if (currentState.expanded) {
+                        // Collapse the text
+                        abstract.textContent = currentState.truncatedText;
+                        readMoreLink.textContent = "view more";
+                    } else {
+                        // Expand the text
+                        abstract.textContent = currentState.originalText;
+                        readMoreLink.textContent = "view less";
+                    }
+
+                    // Update the state
+                    currentState.expanded = !currentState.expanded;
+                    state.set(abstract, currentState);
+                    console.log(`Updated state for abstract at index ${index}:`, currentState);
+                });
             }
-
-            // Attach click listener to the read more link
-            readMoreLink.addEventListener("click", () => {
-                const currentState = state.get(abstract);
-
-                if (!currentState) {
-                    console.error("No state found for abstract. This should not happen.");
-                    return;
-                }
-
-                // Toggle the expanded state
-                if (currentState.expanded) {
-                    // Collapse the text
-                    abstract.textContent = currentState.truncatedText;
-                    readMoreLink.textContent = "view more";
-                } else {
-                    // Expand the text
-                    abstract.textContent = currentState.originalText;
-                    readMoreLink.textContent = "view less";
-                }
-
-                // Update the state
-                currentState.expanded = !currentState.expanded;
-                state.set(abstract, currentState);
-                console.log(`Updated state for abstract at index ${index}:`, currentState);
-            });
         });
     };
 
