@@ -1,41 +1,31 @@
 window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
     /**
-     * Function to update the Wized variable with new data from the request.
+     * Function to update the Wized variable with new data, ensuring no duplicates.
      */
-    const updateSelectedPatents = async () => {
+    const updateSelectedPatents = (result) => {
         try {
-            console.log("Executing searchByPatentNumber3 request...");
-            
-            // Execute the request and fetch the result
-            const result = await Wized.requests.execute("searchByPatentNumber3");
+            console.log("Processing data from searchByPatentNumber3 request...");
 
-            if (!result.ok) {
-                console.error("Request searchByPatentNumber3 failed with status:", result.status);
-                return;
-            }
-
-            console.log("Request searchByPatentNumber3 succeeded:", result);
-
-            // Extract claims data using the specific path
+            // Extract claims data from the result
             const claimsData = result.data?.claims?.map((claim, index) => ({
                 uniqueID: claim.uniqueID,
-                index: index
+                index: index,
             }));
 
             if (!claimsData || claimsData.length === 0) {
-                console.log("No claims data found in the request response.");
+                console.warn("No claims data found in the request response.");
                 return;
             }
 
             console.log("Extracted claims data:", claimsData);
 
-            // Access the target Wized variable
+            // Access the Wized variable
             let selectedPatents = Wized.data.v.home_orderForm_priorArtPreview_selectedPatents;
 
-            // Ensure it's an array
+            // Ensure the variable is an array
             if (!Array.isArray(selectedPatents)) {
-                console.warn("home_orderForm_priorArtPreview_selectedPatents is not an array. Converting it to an array.");
+                console.warn("home_orderForm_priorArtPreview_selectedPatents is not an array. Initializing it as an array.");
                 selectedPatents = [];
             }
 
@@ -43,7 +33,7 @@ window.Wized.push((Wized) => {
             claimsData.forEach((claim) => {
                 const exists = selectedPatents.some((patent) => patent.uniqueID === claim.uniqueID);
                 if (!exists) {
-                    console.log("Adding new unique claim to the array:", claim);
+                    console.log("Adding unique claim to the array:", claim);
                     selectedPatents.push(claim);
                 } else {
                     console.warn("Duplicate claim detected. Skipping claim with uniqueID:", claim.uniqueID);
@@ -55,17 +45,23 @@ window.Wized.push((Wized) => {
 
             console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", selectedPatents);
         } catch (error) {
-            console.error("Unexpected error during searchByPatentNumber3 processing:", error);
+            console.error("Error while processing data from searchByPatentNumber3 request:", error);
         }
     };
 
     /**
-     * Listen for the execution of the searchByPatentNumber3 request and trigger the update function.
+     * Listen for the execution of the searchByPatentNumber3 request.
      */
     Wized.on("request", (event) => {
         if (event.name === "searchByPatentNumber3") {
-            console.log("Detected searchByPatentNumber3 request execution.");
-            updateSelectedPatents();
+            console.log("Detected execution of searchByPatentNumber3 request:", event);
+            if (event.data && event.data.claims) {
+                updateSelectedPatents(event);
+            } else {
+                console.error("searchByPatentNumber3 request did not return expected data structure.");
+            }
         }
     });
+
+    console.log("Listener for searchByPatentNumber3 request has been set up.");
 });
