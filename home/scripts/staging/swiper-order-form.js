@@ -1,51 +1,74 @@
-import { loadStylesheet, loadScript } from "https://supercharger-staging.vercel.app/utilities/external-script-loader.js";
-import { addCustomStyles } from "https://supercharger-staging.vercel.app/utilities/custom-css.js"; // Adjust the path as needed
+// Define the base URL
+const BASE_URL = "https://supercharger-staging.vercel.app";
 
-// Add custom CSS for Swiper navigation buttons
-addCustomStyles(`
-  .swiper-button-next::after,
-  .swiper-button-prev::after {
-    display: none; /* Hide the default arrow icons */
-  }
-`);
+console.log(`Base URL is set to: ${BASE_URL}`);
 
-// Load Swiper CSS
-loadStylesheet(
-  "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
-  () => {
-    console.log("Swiper CSS loaded!");
-  }
-);
+// Import utilities
+import { loadStylesheet, loadScript } from `${BASE_URL}/utilities/external-script-loader.js`;
+import { addCustomStyles } from `${BASE_URL}/utilities/custom-css.js`;
 
-// Load Swiper JS
-loadScript(
-  "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
-  () => {
-    console.log("Swiper JS loaded!");
+try {
+  // Add custom CSS for Swiper navigation buttons
+  addCustomStyles(`
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      display: none; /* Hide the default arrow icons */
+    }
+  `);
+  console.log("Custom styles for Swiper navigation buttons added successfully.");
+} catch (error) {
+  console.error("Failed to add custom styles for Swiper navigation buttons:", error);
+}
 
-    // Initialize Swiper
-    const swiper = new Swiper('.order-form_wrapper', {
-      // Optional parameters for multistep form
-      loop: false, // No looping for a multistep form
-      slidesPerView: 1, // Show one step at a time
-      spaceBetween: 0, // No spacing between slides
+try {
+  // Load Swiper CSS
+  loadStylesheet(
+    "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css",
+    () => {
+      console.log("Swiper CSS loaded!");
+    }
+  );
+} catch (error) {
+  console.error("Failed to load Swiper CSS:", error);
+}
 
-      // Enable autoHeight to adjust based on content
-      autoHeight: true,
+try {
+  // Load Swiper JS
+  loadScript(
+    "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
+    () => {
+      console.log("Swiper JS loaded!");
 
-      // Enable fade effect
-      effect: 'fade',
-      fadeEffect: {
-        crossFade: true, // Enable crossfade between slides
-      },
+      // Initialize Swiper
+      try {
+        const swiper = new Swiper('.order-form_wrapper', {
+          // Optional parameters for multistep form
+          loop: false, // No looping for a multistep form
+          slidesPerView: 1, // Show one step at a time
+          spaceBetween: 0, // No spacing between slides
 
-      // Navigation arrows
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    });
+          // Enable autoHeight to adjust based on content
+          autoHeight: true,
 
-    console.log("Swiper initialized for multistep form!");
-  }
-);
+          // Enable fade effect
+          effect: 'fade',
+          fadeEffect: {
+            crossFade: true, // Enable crossfade between slides
+          },
+
+          // Navigation arrows
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+        });
+
+        console.log("Swiper initialized successfully for multistep form.");
+      } catch (error) {
+        console.error("Failed to initialize Swiper:", error);
+      }
+    }
+  );
+} catch (error) {
+  console.error("Failed to load Swiper JS:", error);
+}
