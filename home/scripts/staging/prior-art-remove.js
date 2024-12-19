@@ -19,10 +19,10 @@ window.Wized.push((Wized) => {
 
             // Check if the listener is already attached to avoid duplication
             if (!button.dataset.listenerAttached) {
-                console.log(Attaching listener to button with publication-number: ${publicationNumber});
+                console.log(`Attaching listener to button with publication-number: ${publicationNumber}`);
 
                 button.addEventListener("click", () => {
-                    console.log(Remove button clicked for publication-number: ${publicationNumber});
+                    console.log(`Remove button clicked for publication-number: ${publicationNumber}`);
 
                     // Access the Wized variable
                     let selectedPatents = Wized.data.v.home_orderForm_priorArtPreview_selectedPatents;
@@ -39,9 +39,9 @@ window.Wized.push((Wized) => {
                     );
 
                     if (selectedPatents.length < initialLength) {
-                        console.log(Removed object with publication-number: ${publicationNumber});
+                        console.log(`Removed object with publication-number: ${publicationNumber}`);
                     } else {
-                        console.warn(No matching object found for publication-number: ${publicationNumber});
+                        console.warn(`No matching object found for publication-number: ${publicationNumber}`);
                     }
 
                     // Update the Wized variable
