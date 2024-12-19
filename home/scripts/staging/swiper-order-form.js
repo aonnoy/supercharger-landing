@@ -35,11 +35,7 @@ loadScript(
       loop: false, // No looping for a multistep form
       slidesPerView: 1, // Show one step at a time
       spaceBetween: 0, // No spacing between slides
-
-      // Enable autoHeight to adjust based on content
-      autoHeight: true,
-
-      // Enable fade effect
+      autoHeight: true, // Enable autoHeight to adjust based on content
       effect: 'fade',
       fadeEffect: {
         crossFade: true, // Enable crossfade between slides
