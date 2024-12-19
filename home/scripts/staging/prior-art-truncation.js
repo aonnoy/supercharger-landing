@@ -12,73 +12,91 @@ window.Wized.push((Wized) => {
     };
 
     /**
-     * Function to initialize listeners for newly added elements.
+     * Function to process a group of elements and initialize truncation and toggle functionality.
+     * @param {string} contentSelector - Selector for the text element (e.g., abstract or claims).
+     * @param {string} linkSelector - Selector for the "View More/Less" link element.
+     * @param {string} logLabel - Label for logging (e.g., "abstract" or "claims").
      */
-    const initializeListeners = () => {
-        console.log("Initializing listeners for patent abstracts...");
+    const processElements = (contentSelector, linkSelector, logLabel) => {
+        console.log(`Initializing listeners for ${logLabel} elements...`);
 
-        // Get all abstract and "view more/less" link elements
-        const abstracts = document.querySelectorAll('[wized="home_orderForm_priorArtPreview_patentAbstract"]');
-        const readMoreLinks = document.querySelectorAll('[wized="home_orderForm_priorArtPreview_patentAbstractReadMore"]');
+        const contents = document.querySelectorAll(`[wized="${contentSelector}"]`);
+        const links = document.querySelectorAll(`[wized="${linkSelector}"]`);
 
-        // Ensure the number of abstracts matches the number of links
-        if (abstracts.length !== readMoreLinks.length) {
-            console.error("Mismatch in number of abstracts and read more links.");
+        // Ensure the number of content elements matches the number of links
+        if (contents.length !== links.length) {
+            console.error(`Mismatch in number of ${logLabel} elements and their links.`);
             return;
         }
 
-        abstracts.forEach((abstract, index) => {
-            const readMoreLink = readMoreLinks[index];
+        contents.forEach((content, index) => {
+            const link = links[index];
 
             // Ensure both elements are valid
-            if (!abstract || !readMoreLink) {
-                console.warn(`Missing elements at index ${index}.`);
+            if (!content || !link) {
+                console.warn(`Missing elements for ${logLabel} at index ${index}.`);
                 return;
             }
 
-            // Check if this abstract has already been processed
-            if (!state.has(abstract)) {
-                console.log(`Setting up abstract and read more link at index ${index}.`);
+            // Check if this content has already been processed
+            if (!state.has(content)) {
+                console.log(`Setting up ${logLabel} and its link at index ${index}.`);
 
                 // Set initial truncated state
-                const originalText = abstract.textContent;
+                const originalText = content.textContent;
                 const truncatedText = truncateText(originalText);
                 const isTruncated = originalText.length > 256;
 
-                // Update the abstract text and state
-                abstract.textContent = isTruncated ? truncatedText : originalText;
-                state.set(abstract, { expanded: false, originalText, truncatedText });
+                // Update the content text and state
+                content.textContent = isTruncated ? truncatedText : originalText;
+                state.set(content, { expanded: false, originalText, truncatedText });
 
-                // Update the read more link text
-                readMoreLink.textContent = isTruncated ? "view more" : "";
+                // Update the link text
+                link.textContent = isTruncated ? "View More" : "";
 
-                // Attach click listener to the read more link
-                readMoreLink.addEventListener("click", () => {
-                    const currentState = state.get(abstract);
+                // Attach click listener to the link
+                link.addEventListener("click", () => {
+                    const currentState = state.get(content);
 
                     if (!currentState) {
-                        console.error("No state found for abstract. This should not happen.");
+                        console.error(`No state found for ${logLabel} element. This should not happen.`);
                         return;
                     }
 
                     // Toggle the expanded state
                     if (currentState.expanded) {
                         // Collapse the text
-                        abstract.textContent = currentState.truncatedText;
-                        readMoreLink.textContent = "view more";
+                        content.textContent = currentState.truncatedText;
+                        link.textContent = "View More";
                     } else {
                         // Expand the text
-                        abstract.textContent = currentState.originalText;
-                        readMoreLink.textContent = "view less";
+                        content.textContent = currentState.originalText;
+                        link.textContent = "View Less";
                     }
 
                     // Update the state
                     currentState.expanded = !currentState.expanded;
-                    state.set(abstract, currentState);
-                    console.log(`Updated state for abstract at index ${index}:`, currentState);
+                    state.set(content, currentState);
+                    console.log(`Updated state for ${logLabel} at index ${index}:`, currentState);
                 });
             }
         });
+    };
+
+    /**
+     * Function to initialize listeners for all target elements.
+     */
+    const initializeListeners = () => {
+        processElements(
+            "home_orderForm_priorArtPreview_patentAbstract",
+            "home_orderForm_priorArtPreview_patentAbstractReadMore",
+            "abstract"
+        );
+        processElements(
+            "home_orderForm_priorArtPreview_patentClaims",
+            "home_orderForm_priorArtPreview_patentClaimsReadMore",
+            "claims"
+        );
     };
 
     /**
