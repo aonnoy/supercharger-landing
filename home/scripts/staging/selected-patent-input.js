@@ -27,8 +27,14 @@ window.Wized.push((Wized) => {
         if (!currentValues.includes(newPublicationNumber)) {
             // Append the new value and update the input
             currentValues.push(newPublicationNumber);
-            inputElement.value = currentValues.join(", ");
-            console.log(`Updated input value: ${inputElement.value}`);
+            const updatedValue = currentValues.join(", ");
+            inputElement.value = updatedValue;
+
+            // Trigger an input event to ensure Wized detects the change
+            const event = new Event("input", { bubbles: true });
+            inputElement.dispatchEvent(event);
+
+            console.log(`Updated input value: ${updatedValue}`);
         } else {
             console.warn(`Publication_number: ${newPublicationNumber} is already present in the input.`);
         }
