@@ -16,7 +16,7 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
       return;
     }
 
-    console.log("Checking active slide for datepicker inputs...");
+    console.log("Swiper instance retrieved successfully. Checking active slide...");
 
     // Get the active slide element
     const activeSlide = swiper.slides[swiper.activeIndex];
@@ -26,34 +26,34 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
       return;
     }
 
-    console.log("Active slide detected. Searching for datepicker inputs...");
+    console.log(`Active slide detected at index ${swiper.activeIndex}. Checking for input with 'wized=home_orderForm_date_input'...`);
 
-    const priorityDateInput = activeSlide.querySelector("[wized='home_orderForm_date_priorityDateInput']");
     const dateInput = activeSlide.querySelector("[wized='home_orderForm_date_input']");
 
-    if (!priorityDateInput && !dateInput) {
-      console.log("No datepicker inputs found in the active slide.");
+    if (!dateInput) {
+      console.error("Input with attribute 'wized=home_orderForm_date_input' not found in the active slide.");
+      console.log("Active slide HTML:", activeSlide.innerHTML); // Log the HTML of the active slide for debugging
       return;
     }
 
-    const targetInput = priorityDateInput || dateInput;
+    console.log("Input with attribute 'wized=home_orderForm_date_input' found. Initializing Flatpickr...");
 
     try {
       // Destroy any existing Flatpickr instance
-      if (targetInput._flatpickr) {
+      if (dateInput._flatpickr) {
         console.log("Destroying existing Flatpickr instance on the target input.");
-        targetInput._flatpickr.destroy();
+        dateInput._flatpickr.destroy();
       }
 
       // Initialize Flatpickr
-      flatpickr(targetInput, {
+      flatpickr(dateInput, {
         dateFormat: "m-d-Y",
         onChange: (selectedDates, dateStr) => {
           console.log(`Date changed in input field. New value: ${dateStr}`);
         },
       });
 
-      console.log("Flatpickr successfully initialized on the active slide.");
+      console.log("Flatpickr successfully initialized on the input.");
     } catch (error) {
       console.error("Error initializing Flatpickr:", error);
     }
@@ -62,7 +62,11 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
   // Reinitialize Flatpickr on each slide change
   const swiper = getSwiperInstance();
   if (swiper) {
-    swiper.on('slideChange', initializeFlatpickr);
+    swiper.on('slideChange', () => {
+      console.log("Slide change detected. Reinitializing Flatpickr...");
+      initializeFlatpickr();
+    });
+
     console.log("Flatpickr initialization set up to trigger on slide changes.");
   } else {
     console.error("Swiper instance not found. Flatpickr initialization will not trigger on slide changes.");
