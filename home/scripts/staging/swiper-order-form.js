@@ -46,23 +46,20 @@ Promise.all([
           // Initialize Swiper
           try {
             swiperInstance = new Swiper('.order-form_wrapper', {
-              loop: false, // No looping for a multistep form
-              slidesPerView: 1, // Show one step at a time
-              spaceBetween: 0, // No spacing between slides
-              
-              allowTouchMove: false, // Prevent manual swiping
-              autoHeight: true, // Automatically adjust height based on content
-
+              loop: false,
+              slidesPerView: 1,
+              spaceBetween: 0,
+              allowTouchMove: false,
+              autoHeight: true,
               effect: 'fade',
               fadeEffect: { crossFade: true },
-
               navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
               },
             });
 
-            console.log("Swiper initialized successfully with manual swiping disabled.");
+            console.log("Swiper initialized successfully.");
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -76,5 +73,10 @@ Promise.all([
     console.error("Failed to dynamically import utilities:", error);
   });
 
-// Export Swiper instance as a module
-export const getSwiperInstance = () => swiperInstance;
+// Export a function to retrieve the Swiper instance
+export const getSwiperInstance = () => {
+  if (!swiperInstance) {
+    console.warn("Swiper instance is not yet initialized.");
+  }
+  return swiperInstance;
+};
