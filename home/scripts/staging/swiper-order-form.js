@@ -3,12 +3,13 @@ const BASE_URL = "https://supercharger-staging.vercel.app";
 
 console.log(`Base URL is set to: ${BASE_URL}`);
 
-// Dynamically import utilities
+// Dynamically import utilities and validation
 Promise.all([
   import(`${BASE_URL}/utilities/external-script-loader.js`),
-  import(`${BASE_URL}/utilities/custom-css.js`)
+  import(`${BASE_URL}/utilities/custom-css.js`),
+  import(`${BASE_URL}/home/scripts/staging/order-form-validation.js`)
 ])
-  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }]) => {
+  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }, { validateActiveSlide }]) => {
     try {
       // Add custom CSS for Swiper navigation buttons
       addCustomStyles(`
@@ -62,6 +63,16 @@ Promise.all([
 
             console.log("Swiper initialized successfully with manual swiping disabled.");
 
+            // Intercept the next button click to validate the active slide
+            const nextButton = document.querySelector('.swiper-button-next');
+            if (nextButton) {
+              nextButton.addEventListener('click', (event) => {
+                if (!validateActiveSlide()) {
+                  event.preventDefault(); // Block navigation to the next slide
+                }
+              });
+            }
+
             // Observe changes in the Swiper slides
             const swiperSlides = document.querySelectorAll('.order-form_wrapper .swiper-slide');
             swiperSlides.forEach((slide, index) => {
@@ -90,4 +101,3 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
-
