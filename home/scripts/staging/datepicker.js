@@ -60,6 +60,12 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
             const targetInput = priorityDateInput || dateInput;
 
             try {
+              // Clear any existing Flatpickr instance on the input (to avoid conflicts)
+              if (targetInput._flatpickr) {
+                console.log("Destroying existing Flatpickr instance on the target input.");
+                targetInput._flatpickr.destroy();
+              }
+
               // Initialize Flatpickr on the target input field
               flatpickr(targetInput, {
                 dateFormat: "m-d-Y", // Set the desired date format (e.g., 12-25-2023)
