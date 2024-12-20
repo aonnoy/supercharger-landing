@@ -78,6 +78,9 @@ Promise.all([
 
               console.log(`MutationObserver set up for slide ${index + 1}.`);
             });
+
+            // Export Swiper instance as a module
+            export const getSwiperInstance = () => swiper;
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
