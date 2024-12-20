@@ -119,3 +119,4 @@ export const attachValidationToNextButton = (swiperInstance) => {
 };
 
 
+
