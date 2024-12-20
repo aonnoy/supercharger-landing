@@ -4,6 +4,7 @@ window.Wized.push((Wized) => {
      * Keep track of the previously selected radio option
      */
     let previouslySelectedFields = [];
+    let previouslySelectedVariables = [];
 
     /**
      * Function to initialize listeners for radio buttons with `required-fields` attribute.
@@ -57,6 +58,16 @@ window.Wized.push((Wized) => {
                     });
                 }
 
+                // Reset the Wized variables of the previously selected radio option
+                if (previouslySelectedVariables.length > 0) {
+                    previouslySelectedVariables.forEach((variable) => {
+                        if (variable.trim()) {
+                            console.log(`Resetting previously selected Wized variable: ${variable}`);
+                            Wized.data.v[variable.trim()] = null;
+                        }
+                    });
+                }
+
                 // Mark the current required fields as required and reset them
                 requiredFields.forEach((field) => {
                     const targetElement = document.querySelector(`[wized="${field.trim()}"]`);
@@ -77,10 +88,11 @@ window.Wized.push((Wized) => {
                     }
                 });
 
-                // Update the previously selected fields
+                // Update the previously selected fields and variables
                 previouslySelectedFields = requiredFields;
+                previouslySelectedVariables = wizedVariables;
 
-                // Reset the Wized variables
+                // Reset the Wized variables for the current radio option
                 wizedVariables.forEach((variable) => {
                     if (variable.trim()) {
                         console.log(`Resetting Wized variable: ${variable}`);
