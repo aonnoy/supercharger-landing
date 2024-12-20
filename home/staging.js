@@ -22,3 +22,6 @@ console.log('Prior art remove function is loaded');
 
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/selected-patent-input.js';
 console.log('Selected Patent Input function is loaded');
+
+import 'https://supercharger-staging.vercel.app/home/scripts/staging/set-fields-required.js';
+console.log('Set Fields Required function is loaded');
