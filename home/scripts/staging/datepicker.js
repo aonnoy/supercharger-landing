@@ -8,40 +8,41 @@ loadStylesheet("https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css", 
 loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
   console.log("Flatpickr JS loaded successfully.");
 
+  // Ensure that this function gets executed
   const initializeFlatpickr = () => {
-    const swiper = getSwiperInstance();
+    console.log("Initializing Flatpickr setup...");
 
+    const swiper = getSwiperInstance();
     if (!swiper) {
-      console.error("Swiper instance not available. Ensure Swiper is initialized before using it.");
+      console.error("Swiper instance is not available. Ensure Swiper is initialized correctly.");
       return;
     }
 
-    console.log("Swiper instance retrieved successfully. Checking active slide...");
+    console.log("Swiper instance retrieved. Current activeIndex:", swiper.activeIndex);
 
-    // Get the active slide element
+    // Get the active slide
     const activeSlide = swiper.slides[swiper.activeIndex];
 
     if (!activeSlide) {
-      console.error("No active slide found.");
+      console.error("No active slide found for the current activeIndex.");
       return;
     }
 
-    console.log(`Active slide detected at index ${swiper.activeIndex}. Checking for input with 'wized=home_orderForm_date_input'...`);
+    console.log("Active slide detected. HTML content:", activeSlide.innerHTML);
 
+    // Locate the target input
     const dateInput = activeSlide.querySelector("[wized='home_orderForm_date_input']");
-
     if (!dateInput) {
-      console.error("Input with attribute 'wized=home_orderForm_date_input' not found in the active slide.");
-      console.log("Active slide HTML:", activeSlide.innerHTML); // Log the HTML of the active slide for debugging
+      console.error("Date input with attribute 'wized=home_orderForm_date_input' not found in the active slide.");
       return;
     }
 
-    console.log("Input with attribute 'wized=home_orderForm_date_input' found. Initializing Flatpickr...");
+    console.log("Date input detected. Initializing Flatpickr...");
 
     try {
       // Destroy any existing Flatpickr instance
       if (dateInput._flatpickr) {
-        console.log("Destroying existing Flatpickr instance on the target input.");
+        console.log("Existing Flatpickr instance detected. Destroying it...");
         dateInput._flatpickr.destroy();
       }
 
@@ -53,25 +54,25 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
         },
       });
 
-      console.log("Flatpickr successfully initialized on the input.");
+      console.log("Flatpickr successfully initialized on the date input.");
     } catch (error) {
       console.error("Error initializing Flatpickr:", error);
     }
   };
 
-  // Reinitialize Flatpickr on each slide change
+  // Reinitialize Flatpickr on slide change
   const swiper = getSwiperInstance();
   if (swiper) {
+    console.log("Swiper instance found. Setting up slideChange listener...");
     swiper.on('slideChange', () => {
       console.log("Slide change detected. Reinitializing Flatpickr...");
       initializeFlatpickr();
     });
 
-    console.log("Flatpickr initialization set up to trigger on slide changes.");
+    // Initial Flatpickr setup
+    console.log("Running initial Flatpickr setup...");
+    initializeFlatpickr();
   } else {
-    console.error("Swiper instance not found. Flatpickr initialization will not trigger on slide changes.");
+    console.error("Swiper instance not found. Flatpickr initialization cannot proceed.");
   }
-
-  // Initial Flatpickr setup for the current active slide
-  initializeFlatpickr();
 });
