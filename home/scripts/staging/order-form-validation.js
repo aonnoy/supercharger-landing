@@ -21,58 +21,72 @@ export const validateActiveSlide = () => {
     requiredFields.forEach((field) => {
         const errorElement = field.closest('.form-field_wrapper')?.querySelector('.form-field_error');
 
-        // Validate field only when the next button is clicked
-        const showError = () => {
-            if (errorElement) {
-                errorElement.removeAttribute('custom-cloak');
-            }
-        };
-
-        const hideError = () => {
-            if (errorElement) {
-                errorElement.setAttribute('custom-cloak', '');
-            }
-        };
-
         // Check field validity
         if (field.type === 'radio' || field.type === 'checkbox') {
             const isChecked = activeSlide.querySelector(`[name="${field.name}"]:checked`);
             if (!isChecked) {
                 console.log(`Radio/Checkbox group "${field.name}" is invalid.`);
                 isValid = false;
-                showError();
+                if (errorElement) {
+                    errorElement.removeAttribute('custom-cloak');
+                }
             } else {
-                hideError();
+                if (errorElement) {
+                    errorElement.setAttribute('custom-cloak', '');
+                }
             }
         } else if (field.tagName === 'SELECT' && field.value === '') {
             console.log(`Select field "${field.name}" is empty.`);
             isValid = false;
-            showError();
+            if (errorElement) {
+                errorElement.removeAttribute('custom-cloak');
+            }
         } else if ((field.tagName === 'INPUT' || field.tagName === 'TEXTAREA') && !field.value.trim()) {
             console.log(`Input/textarea field "${field.name}" is empty.`);
             isValid = false;
-            showError();
+            if (errorElement) {
+                errorElement.removeAttribute('custom-cloak');
+            }
         } else {
-            hideError();
+            // If valid, hide the error element
+            if (errorElement) {
+                errorElement.setAttribute('custom-cloak', '');
+            }
         }
     });
 
-    // Return the validation result
     return isValid;
 };
 
 /**
- * Function to disable/enable the next button based on validation.
+ * Function to initialize validation and ensure the next button only works if fields are valid.
+ * @param {Swiper} swiperInstance - The Swiper instance.
  */
-export const enableNextButton = (swiperInstance) => {
+export const attachValidationToNextButton = (swiperInstance) => {
     const nextButton = document.querySelector('.swiper-button-next');
     if (!nextButton) return;
 
-    // Disable the next button initially
-    nextButton.setAttribute('disabled', 'true');
+    nextButton.addEventListener('click', (event) => {
+        const isValid = validateActiveSlide();
 
-    // Attach input/change listeners to required fields in the active slide
-    const attachFieldListeners = () => {
+        if (!isValid) {
+            console.warn("Validation failed. Preventing navigation to the next slide.");
+            event.preventDefault(); // Prevent navigation
+        } else {
+            console.log("Validation passed. Allowing navigation.");
+        }
+    });
+
+    // Disable the next button until the fields are valid
+    const disableNextButton = () => {
+        nextButton.setAttribute('disabled', 'true');
+    };
+
+    const enableNextButton = () => {
+        nextButton.removeAttribute('disabled');
+    };
+
+    const attachListenersToFields = () => {
         const activeSlide = document.querySelector('.swiper-slide-active');
         if (!activeSlide) return;
 
@@ -81,9 +95,9 @@ export const enableNextButton = (swiperInstance) => {
         const checkValidity = () => {
             const isValid = validateActiveSlide();
             if (isValid) {
-                nextButton.removeAttribute('disabled');
+                enableNextButton();
             } else {
-                nextButton.setAttribute('disabled', 'true');
+                disableNextButton();
             }
         };
 
@@ -92,16 +106,16 @@ export const enableNextButton = (swiperInstance) => {
             field.addEventListener('change', checkValidity);
         });
 
-        // Run initial validation
-        checkValidity();
+        checkValidity(); // Initial check
     };
 
-    // Reattach listeners every time the slide changes
     swiperInstance.on('slideChange', () => {
-        attachFieldListeners();
+        disableNextButton();
+        attachListenersToFields();
     });
 
-    // Initial attachment
-    attachFieldListeners();
+    // Initial attachment for the first slide
+    attachListenersToFields();
 };
+
 
