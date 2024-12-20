@@ -34,22 +34,26 @@ const processElements = (contentSelector, linkSelector, logLabel) => {
             return;
         }
 
-        if (!state.has(content)) {
-            console.log(`Setting up ${logLabel} and its link at index ${index}.`);
+        // Reset state for the element
+        const originalText = content.textContent;
+        const truncatedText = truncateText(originalText);
+        const isTruncated = originalText.length > 256;
 
-            // Set initial truncated state
-            const originalText = content.textContent;
-            const truncatedText = truncateText(originalText);
-            const isTruncated = originalText.length > 256;
-
-            // Update the content text and state
+        // If already in state, reset to truncated if not expanded
+        if (state.has(content)) {
+            const currentState = state.get(content);
+            if (!currentState.expanded) {
+                content.textContent = truncatedText;
+                link.textContent = isTruncated ? "View More" : "";
+            }
+        } else {
+            // Initialize new state
             content.textContent = isTruncated ? truncatedText : originalText;
             state.set(content, { expanded: false, originalText, truncatedText });
 
-            // Update the link text
             link.textContent = isTruncated ? "View More" : "";
 
-            // Attach click listener to the link
+            // Attach click listener
             link.addEventListener("click", () => {
                 const currentState = state.get(content);
 
@@ -58,7 +62,7 @@ const processElements = (contentSelector, linkSelector, logLabel) => {
                     return;
                 }
 
-                // Toggle the expanded state
+                // Toggle expanded state
                 if (currentState.expanded) {
                     content.textContent = currentState.truncatedText;
                     link.textContent = "View More";
@@ -71,8 +75,6 @@ const processElements = (contentSelector, linkSelector, logLabel) => {
                 state.set(content, currentState);
                 console.log(`Updated state for ${logLabel} at index ${index}:`, currentState);
             });
-        } else {
-            console.log(`Listeners already attached for ${logLabel} at index ${index}.`);
         }
     });
 };
