@@ -53,6 +53,11 @@ window.Wized.push((Wized) => {
 
                         inputField.value = updatedInputValue;
                         console.log(`Updated input value: "${updatedInputValue}"`);
+
+                        // Trigger an input event to notify Wized of the change
+                        const event = new Event('input', { bubbles: true });
+                        inputField.dispatchEvent(event);
+                        console.log("Dispatched input event for updated input field.");
                     } else {
                         console.warn('Input field with attribute wized="home_orderForm_selectedPatentsInput" not found.');
                     }
@@ -79,3 +84,4 @@ window.Wized.push((Wized) => {
     console.log("Setting up initial remove listeners...");
     initializeRemoveListeners();
 });
+
