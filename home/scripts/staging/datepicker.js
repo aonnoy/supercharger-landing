@@ -1,4 +1,4 @@
-import { loadStylesheet, loadScript } from 'https://supercharger-staging.vercel.app/home/scripts/staging/external-script-loader.js';
+import { loadStylesheet, loadScript } from 'https://supercharger-staging.vercel.app/utilities/external-script-loader.js';
 
 /**
  * Step 1: Dynamically load the Flatpickr CSS and JS files.
