@@ -40,6 +40,23 @@ window.Wized.push((Wized) => {
                     Wized.data.v.home_orderForm_priorArtPreview_selectedPatents = selectedPatents;
                     console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", selectedPatents);
 
+                    // Update the input field
+                    const inputField = document.querySelector('[wized="home_orderForm_selectedPatentsInput"]');
+                    if (inputField) {
+                        console.log(`Original input value: "${inputField.value}"`);
+
+                        // Remove the publication number from the input field
+                        const updatedInputValue = inputField.value
+                            .split(', ')
+                            .filter((value) => value !== publicationNumber)
+                            .join(', ');
+
+                        inputField.value = updatedInputValue;
+                        console.log(`Updated input value: "${updatedInputValue}"`);
+                    } else {
+                        console.warn('Input field with attribute wized="home_orderForm_selectedPatentsInput" not found.');
+                    }
+
                     // Reinitialize truncation listeners
                     console.log("Reinitializing truncation listeners...");
                     initializeTruncationListeners();
