@@ -3,6 +3,8 @@ const BASE_URL = "https://supercharger-staging.vercel.app";
 
 console.log(`Base URL is set to: ${BASE_URL}`);
 
+let swiperInstance; // Declare Swiper instance
+
 // Dynamically import utilities
 Promise.all([
   import(`${BASE_URL}/utilities/external-script-loader.js`),
@@ -43,7 +45,7 @@ Promise.all([
 
           // Initialize Swiper
           try {
-            const swiper = new Swiper('.order-form_wrapper', {
+            swiperInstance = new Swiper('.order-form_wrapper', {
               loop: false, // No looping for a multistep form
               slidesPerView: 1, // Show one step at a time
               spaceBetween: 0, // No spacing between slides
@@ -61,26 +63,6 @@ Promise.all([
             });
 
             console.log("Swiper initialized successfully with manual swiping disabled.");
-
-            // Observe changes in the Swiper slides
-            const swiperSlides = document.querySelectorAll('.order-form_wrapper .swiper-slide');
-            swiperSlides.forEach((slide, index) => {
-              const observer = new MutationObserver(() => {
-                console.log(`Changes detected in slide ${index + 1}. Updating Swiper height...`);
-                swiper.updateAutoHeight(0); // Update Swiper height
-              });
-
-              observer.observe(slide, {
-                childList: true, // Watch for added/removed child elements
-                attributes: true, // Watch for attribute changes
-                subtree: true, // Watch all descendants
-              });
-
-              console.log(`MutationObserver set up for slide ${index + 1}.`);
-            });
-
-            // Export Swiper instance as a module
-            export const getSwiperInstance = () => swiper;
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -93,3 +75,6 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
+
+// Export Swiper instance as a module
+export const getSwiperInstance = () => swiperInstance;
