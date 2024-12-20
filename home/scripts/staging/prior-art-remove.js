@@ -1,3 +1,5 @@
+import { initializeTruncationListeners } from './truncation.js';
+
 window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
     const initializeRemoveListeners = () => {
@@ -38,54 +40,13 @@ window.Wized.push((Wized) => {
                     Wized.data.v.home_orderForm_priorArtPreview_selectedPatents = selectedPatents;
                     console.log("Updated home_orderForm_priorArtPreview_selectedPatents variable:", selectedPatents);
 
-                    // Reapply truncation logic
-                    console.log("Reapplying truncation logic...");
-                    reapplyTruncationLogic(Wized);
+                    // Reinitialize truncation listeners
+                    console.log("Reinitializing truncation listeners...");
+                    initializeTruncationListeners();
                 });
 
                 button.dataset.listenerAttached = true;
             }
-        });
-    };
-
-    const reapplyTruncationLogic = (Wized) => {
-        const abstractElements = Wized.elements.getAll("home_orderForm_priorArtPreview_patentAbstract");
-        const readMoreLinks = Wized.elements.getAll("home_orderForm_priorArtPreview_patentAbstractReadMore");
-        const claimsElements = Wized.elements.getAll("home_orderForm_priorArtPreview_patentClaims");
-        const claimsReadMoreLinks = Wized.elements.getAll("home_orderForm_priorArtPreview_patentClaimsReadMore");
-
-        // Reprocess abstract elements
-        if (abstractElements && readMoreLinks) {
-            processElements(abstractElements, readMoreLinks, "abstract");
-        }
-
-        // Reprocess claims elements
-        if (claimsElements && claimsReadMoreLinks) {
-            processElements(claimsElements, claimsReadMoreLinks, "claims");
-        }
-    };
-
-    const processElements = (contents, links, logLabel) => {
-        console.log(`Reprocessing ${logLabel} elements...`);
-
-        if (contents.length !== links.length) {
-            console.error(`Mismatch in number of ${logLabel} elements and their links.`);
-            return;
-        }
-
-        contents.forEach((content, index) => {
-            const link = links[index];
-
-            if (!content || !link) {
-                console.warn(`Missing elements for ${logLabel} at index ${index}.`);
-                return;
-            }
-
-            const originalText = content.textContent;
-            const truncatedText = originalText.length > 256 ? originalText.slice(0, 256) + "..." : originalText;
-
-            content.textContent = truncatedText;
-            link.textContent = originalText.length > 256 ? "View More" : "";
         });
     };
 
@@ -101,4 +62,3 @@ window.Wized.push((Wized) => {
     console.log("Setting up initial remove listeners...");
     initializeRemoveListeners();
 });
-
