@@ -38,31 +38,36 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
 
       console.log("Active slide detected. HTML content:", activeSlide.innerHTML);
 
-      // Look for the input inside the active slide
+      // Look for the inputs inside the active slide
       const dateInput = activeSlide.querySelector("[wized='home_orderForm_date_input']");
-      if (!dateInput) {
-        console.warn("Date input not found in the active slide.");
+      const priorityDateInput = activeSlide.querySelector("[wized='home_orderForm_date_priorityDateInput']");
+
+      // Choose the input to initialize Flatpickr on
+      const targetInput = dateInput || priorityDateInput;
+
+      if (!targetInput) {
+        console.warn("No date input or priority date input found in the active slide.");
         return;
       }
 
-      console.log("Date input detected. Initializing Flatpickr...");
+      console.log(`Target input detected (${targetInput.getAttribute('wized')}). Initializing Flatpickr...`);
 
       try {
         // Destroy any existing Flatpickr instance
-        if (dateInput._flatpickr) {
+        if (targetInput._flatpickr) {
           console.log("Destroying existing Flatpickr instance...");
-          dateInput._flatpickr.destroy();
+          targetInput._flatpickr.destroy();
         }
 
         // Initialize Flatpickr
-        flatpickr(dateInput, {
+        flatpickr(targetInput, {
           dateFormat: "m-d-Y",
           onChange: (selectedDates, dateStr) => {
             console.log(`Flatpickr date changed: ${dateStr}`);
           },
         });
 
-        console.log("Flatpickr successfully initialized.");
+        console.log(`Flatpickr successfully initialized on ${targetInput.getAttribute('wized')}.`);
       } catch (error) {
         console.error("Error initializing Flatpickr:", error);
       }
@@ -74,7 +79,7 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
       initializeFlatpickrOnActiveSlide();
     });
 
-    // Initial Flatpickr setup
+    // Initial Flatpickr setup for the current active slide
     initializeFlatpickrOnActiveSlide();
   };
 
