@@ -44,13 +44,16 @@ Promise.all([
           // Initialize Swiper
           try {
             const swiper = new Swiper('.order-form_wrapper', {
-              loop: false,
-              slidesPerView: 1,
-              spaceBetween: 0,
-              allowTouchMove: false,
-              autoHeight: true,
+              loop: false, // No looping for a multistep form
+              slidesPerView: 1, // Show one step at a time
+              spaceBetween: 0, // No spacing between slides
+              
+              allowTouchMove: false, // Prevent manual swiping
+              autoHeight: true, // Automatically adjust height based on content
+
               effect: 'fade',
               fadeEffect: { crossFade: true },
+
               navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -59,45 +62,21 @@ Promise.all([
 
             console.log("Swiper initialized successfully with manual swiping disabled.");
 
-            // Add validation logic to the "Next" button
-            const nextButton = document.querySelector('.swiper-button-next');
-            nextButton.addEventListener('click', () => {
-              const currentSlide = document.querySelector('.order-form_wrapper .swiper-slide-active');
-
-              // Perform validation
-              let isValid = true;
-
-              // Find all required radio inputs in the current slide
-              const requiredRadioGroups = currentSlide.querySelectorAll('input[type="radio"][required]');
-              requiredRadioGroups.forEach((radio) => {
-                // Find the parent wrapper with the error message
-                const errorElement = radio.closest('.form-field_wrapper')?.querySelector('.form-field_error');
-
-                // Check if the radio group has a selected radio
-                const radioGroupName = radio.name;
-                const selectedRadio = currentSlide.querySelector(`input[name="${radioGroupName}"]:checked`);
-
-                if (!selectedRadio) {
-                  // If no radio is selected, show the error
-                  isValid = false;
-                  if (errorElement) {
-                    errorElement.removeAttribute('custom-cloak');
-                  }
-                } else {
-                  // If radio is selected, hide the error
-                  if (errorElement) {
-                    errorElement.setAttribute('custom-cloak', '');
-                  }
-                }
+            // Observe changes in the Swiper slides
+            const swiperSlides = document.querySelectorAll('.order-form_wrapper .swiper-slide');
+            swiperSlides.forEach((slide, index) => {
+              const observer = new MutationObserver(() => {
+                console.log(`Changes detected in slide ${index + 1}. Updating Swiper height...`);
+                swiper.updateAutoHeight(0); // Update Swiper height
               });
 
-              if (!isValid) {
-                console.log("Validation failed. Preventing navigation to the next slide.");
-                return; // Stop execution to prevent moving to the next slide
-              }
+              observer.observe(slide, {
+                childList: true, // Watch for added/removed child elements
+                attributes: true, // Watch for attribute changes
+                subtree: true, // Watch all descendants
+              });
 
-              console.log("Validation passed. Proceeding to the next slide.");
-              swiper.slideNext(); // Move to the next slide manually
+              console.log(`MutationObserver set up for slide ${index + 1}.`);
             });
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
