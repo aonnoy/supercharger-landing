@@ -9,7 +9,7 @@ Promise.all([
   import(`${BASE_URL}/utilities/custom-css.js`),
   import(`${BASE_URL}/home/scripts/staging/order-form-validation.js`)
 ])
-  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }, { validateActiveSlide }]) => {
+  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }, { validateActiveSlide, enableNextButton }]) => {
     try {
       // Add custom CSS for Swiper navigation buttons
       addCustomStyles(`
@@ -63,7 +63,7 @@ Promise.all([
 
             console.log("Swiper initialized successfully with manual swiping disabled.");
 
-            // Intercept the next button click to validate the active slide
+            // Attach validation to the next button
             const nextButton = document.querySelector('.swiper-button-next');
             if (nextButton) {
               nextButton.addEventListener('click', (event) => {
@@ -73,22 +73,9 @@ Promise.all([
               });
             }
 
-            // Observe changes in the Swiper slides
-            const swiperSlides = document.querySelectorAll('.order-form_wrapper .swiper-slide');
-            swiperSlides.forEach((slide, index) => {
-              const observer = new MutationObserver(() => {
-                console.log(`Changes detected in slide ${index + 1}. Updating Swiper height...`);
-                swiper.updateAutoHeight(0); // Update Swiper height
-              });
+            // Enable/disable the next button based on validation
+            enableNextButton(swiper);
 
-              observer.observe(slide, {
-                childList: true, // Watch for added/removed child elements
-                attributes: true, // Watch for attribute changes
-                subtree: true, // Watch all descendants
-              });
-
-              console.log(`MutationObserver set up for slide ${index + 1}.`);
-            });
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -101,3 +88,4 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
+
