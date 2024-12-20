@@ -25,3 +25,6 @@ console.log('Selected Patent Input function is loaded');
 
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/set-fields-required.js';
 console.log('Set Fields Required function is loaded');
+
+import 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-validation.js';
+console.log('Order form validation is loaded');
