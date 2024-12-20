@@ -1,6 +1,6 @@
-window.Wized = window.Wized || [];
-window.Wized.push((Wized) => {
-    const state = new Map(); // Map to keep track of expanded elements (key: element, value: expanded or not)
+// Exported function to initialize listeners
+export const initializeTruncationListeners = () => {
+    const state = new Map();
 
     const truncateText = (text, maxLength = 256) => {
         return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
@@ -26,8 +26,6 @@ window.Wized.push((Wized) => {
             }
 
             if (!state.has(content)) {
-                console.log(`Setting up ${logLabel} and its link at index ${index}.`);
-
                 const originalText = content.textContent;
                 const truncatedText = truncateText(originalText);
                 const isTruncated = originalText.length > 256;
@@ -60,33 +58,31 @@ window.Wized.push((Wized) => {
         });
     };
 
-    const initializeTruncationListeners = () => {
-        processElements(
-            "home_orderForm_priorArtPreview_patentAbstract",
-            "home_orderForm_priorArtPreview_patentAbstractReadMore",
-            "abstract"
-        );
-        processElements(
-            "home_orderForm_priorArtPreview_patentClaims",
-            "home_orderForm_priorArtPreview_patentClaimsReadMore",
-            "claims"
-        );
-    };
+    processElements(
+        "home_orderForm_priorArtPreview_patentAbstract",
+        "home_orderForm_priorArtPreview_patentAbstractReadMore",
+        "abstract"
+    );
 
-    // Expose the function on the Wized object
-    Wized.functions = Wized.functions || {};
-    Wized.functions.reinitializeTruncation = initializeTruncationListeners;
+    processElements(
+        "home_orderForm_priorArtPreview_patentClaims",
+        "home_orderForm_priorArtPreview_patentClaimsReadMore",
+        "claims"
+    );
+};
+
+// Wrap the initialization for Wized
+window.Wized = window.Wized || [];
+window.Wized.push((Wized) => {
+    console.log("Setting up initial truncation listeners...");
+    initializeTruncationListeners();
 
     Wized.on("request", (event) => {
         if (event.name === "searchByPatentNumber3") {
-            console.log("Detected execution of searchByPatentNumber3 request. Reinitializing listeners...");
+            console.log("Detected execution of searchByPatentNumber3 request. Reinitializing truncation listeners...");
             setTimeout(() => {
                 initializeTruncationListeners();
             }, 100);
         }
     });
-
-    console.log("Setting up initial truncation listeners...");
-    initializeTruncationListeners();
 });
-
