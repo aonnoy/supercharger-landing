@@ -9,7 +9,7 @@ Promise.all([
   import(`${BASE_URL}/utilities/custom-css.js`),
   import(`${BASE_URL}/home/scripts/staging/order-form-validation.js`)
 ])
-  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }, { validateActiveSlide, enableNextButton }]) => {
+  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }, { validateActiveSlide, attachValidationToNextButton }]) => {
     try {
       // Add custom CSS for Swiper navigation buttons
       addCustomStyles(`
@@ -64,17 +64,7 @@ Promise.all([
             console.log("Swiper initialized successfully with manual swiping disabled.");
 
             // Attach validation to the next button
-            const nextButton = document.querySelector('.swiper-button-next');
-            if (nextButton) {
-              nextButton.addEventListener('click', (event) => {
-                if (!validateActiveSlide()) {
-                  event.preventDefault(); // Block navigation to the next slide
-                }
-              });
-            }
-
-            // Enable/disable the next button based on validation
-            enableNextButton(swiper);
+            attachValidationToNextButton(swiper);
 
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
@@ -88,4 +78,3 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
-
