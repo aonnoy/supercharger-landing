@@ -1,6 +1,6 @@
 // swiper-order-form.js
 
-import { validateCurrentSlide } from './order-form-validation.js';
+import { validateCurrentSlide } from 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-validation.js';
 
 // Define the base URL
 const BASE_URL = "https://supercharger-staging.vercel.app";
