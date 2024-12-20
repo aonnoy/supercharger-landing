@@ -1,4 +1,4 @@
-import { initializeTruncationListeners } from './truncation.js';
+import { initializeTruncationListeners } from 'https://supercharger-staging.vercel.app/home/scripts/staging/prior-art-truncation.js';
 
 window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
