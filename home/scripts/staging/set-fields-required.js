@@ -47,13 +47,22 @@ window.Wized.push((Wized) => {
                     radioSelect.classList.add("w--redirected-checked");
                 }
 
-                // Mark the previous inputs as not required
+                // Reset inputs from the previous radio option
                 if (previouslySelectedFields.length > 0) {
                     previouslySelectedFields.forEach((field) => {
                         const targetElement = document.querySelector(`[wized="${field.trim()}"]`);
                         if (targetElement) {
-                            console.log(`Marking field as NOT required: ${field}`);
+                            console.log(`Resetting and marking field as NOT required: ${field}`);
                             targetElement.removeAttribute("required");
+
+                            // Reset the field based on its type
+                            if (targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") {
+                                targetElement.value = "";
+                            } else if (targetElement.tagName === "SELECT") {
+                                targetElement.selectedIndex = 0;
+                            } else if (targetElement.type === "checkbox" || targetElement.type === "radio") {
+                                targetElement.checked = false;
+                            }
                         }
                     });
                 }
