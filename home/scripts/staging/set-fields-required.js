@@ -58,6 +58,9 @@ window.Wized.push((Wized) => {
                             // Reset the field based on its type
                             if (targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") {
                                 targetElement.value = "";
+                                // Dispatch a bubble event for text inputs and text areas
+                                const event = new Event("input", { bubbles: true });
+                                targetElement.dispatchEvent(event);
                             } else if (targetElement.tagName === "SELECT") {
                                 targetElement.selectedIndex = 0;
                             } else if (targetElement.type === "checkbox" || targetElement.type === "radio") {
@@ -87,6 +90,9 @@ window.Wized.push((Wized) => {
                         // Reset the field based on its type
                         if (targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") {
                             targetElement.value = "";
+                            // Dispatch a bubble event for text inputs and text areas
+                            const event = new Event("input", { bubbles: true });
+                            targetElement.dispatchEvent(event);
                         } else if (targetElement.tagName === "SELECT") {
                             targetElement.selectedIndex = 0;
                         } else if (targetElement.type === "checkbox" || targetElement.type === "radio") {
