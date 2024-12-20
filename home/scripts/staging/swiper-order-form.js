@@ -1,15 +1,18 @@
+// swiper-order-form.js
+
+import { validateCurrentSlide } from './order-form-validation.js';
+
 // Define the base URL
 const BASE_URL = "https://supercharger-staging.vercel.app";
 
 console.log(`Base URL is set to: ${BASE_URL}`);
 
-// Dynamically import utilities and validation
+// Dynamically import utilities
 Promise.all([
   import(`${BASE_URL}/utilities/external-script-loader.js`),
-  import(`${BASE_URL}/utilities/custom-css.js`),
-  import(`${BASE_URL}/home/scripts/staging/order-form-validation.js`)
+  import(`${BASE_URL}/utilities/custom-css.js`)
 ])
-  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }, { validateActiveSlide, attachValidationToNextButton }]) => {
+  .then(([{ loadStylesheet, loadScript }, { addCustomStyles }]) => {
     try {
       // Add custom CSS for Swiper navigation buttons
       addCustomStyles(`
@@ -45,16 +48,13 @@ Promise.all([
           // Initialize Swiper
           try {
             const swiper = new Swiper('.order-form_wrapper', {
-              loop: false, // No looping for a multistep form
-              slidesPerView: 1, // Show one step at a time
-              spaceBetween: 0, // No spacing between slides
-              
-              allowTouchMove: false, // Prevent manual swiping
-              autoHeight: true, // Automatically adjust height based on content
-
+              loop: false,
+              slidesPerView: 1,
+              spaceBetween: 0,
+              allowTouchMove: false,
+              autoHeight: true,
               effect: 'fade',
               fadeEffect: { crossFade: true },
-
               navigation: {
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
@@ -63,9 +63,20 @@ Promise.all([
 
             console.log("Swiper initialized successfully with manual swiping disabled.");
 
-            // Attach validation to the next button
-            attachValidationToNextButton(swiper);
+            // Hook into the Next button to perform validation
+            const nextButton = document.querySelector('.swiper-button-next');
+            nextButton.addEventListener('click', () => {
+              const currentSlide = document.querySelector('.order-form_wrapper .swiper-slide-active');
 
+              // Validate the current slide
+              if (!validateCurrentSlide(currentSlide)) {
+                console.log("Validation failed. Preventing navigation to the next slide.");
+                return; // Stop execution to prevent moving to the next slide
+              }
+
+              console.log("Validation passed. Proceeding to the next slide.");
+              swiper.slideNext(); // Move to the next slide manually
+            });
           } catch (error) {
             console.error("Failed to initialize Swiper:", error);
           }
@@ -78,5 +89,3 @@ Promise.all([
   .catch((error) => {
     console.error("Failed to dynamically import utilities:", error);
   });
-
-
