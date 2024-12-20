@@ -23,12 +23,12 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
     const initializeFlatpickr = () => {
       console.log("Initializing Flatpickr setup...");
 
-      // Find all radio elements with the specified custom attribute
-      const radioElements = document.querySelectorAll("[home_orderForm_selectProduct_radio]");
+      // Corrected selector for radio elements
+      const radioElements = document.querySelectorAll("[wized='home_orderForm_selectProduct_radio']");
 
       // Check if any radio buttons exist in the DOM
       if (radioElements.length > 0) {
-        console.log(`Found ${radioElements.length} radio element(s) with attribute 'home_orderForm_selectProduct_radio'.`);
+        console.log(`Found ${radioElements.length} radio element(s) with attribute 'wized=home_orderForm_selectProduct_radio'.`);
 
         // Loop through each radio button to attach a click event listener
         radioElements.forEach((radio, index) => {
@@ -89,7 +89,7 @@ loadScript("https://cdn.jsdelivr.net/npm/flatpickr", () => {
           });
         });
       } else {
-        console.error("No radio elements found with attribute 'home_orderForm_selectProduct_radio'.");
+        console.error("No radio elements found with attribute 'wized=home_orderForm_selectProduct_radio'.");
       }
     };
 
