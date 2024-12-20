@@ -100,7 +100,7 @@ Promise.all([
               swiper.slideNext(); // Move to the next slide manually
             });
           } catch (error) {
-            console.error("Failed to initialize Swiper:", error);
+            console.error("Failed to Initialize Swiper:", error);
           }
         }
       );
