@@ -26,11 +26,11 @@ console.log('Selected Patent Input function is loaded');
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/set-fields-required.js';
 console.log('Set Fields Required function is loaded');
 
-import 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-validation-navigation.js';
-console.log('Order form validation & navigation is loaded');
-
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/datepicker.js';
 console.log('datepicker function is loaded');
 
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/jurisdictions-select.js';
 console.log('jurisdictions select function is loaded');
+
+import 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-validation-navigation.js';
+console.log('Order form validation & navigation is loaded');
