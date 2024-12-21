@@ -1,3 +1,21 @@
+// ** INSTRUCTIONS FOR SETTING UP ATTRIBUTES
+// 1. Select the parent radio element and add the attribute "required-fields". 
+//    - The value of this attribute should include the Wized attribute names of the form fields that need to be marked as required, separated by commas.
+//    - These fields will be validated as required when the corresponding radio option is selected.
+//    - The value for this attribute can be empty
+//
+// 2. Add the attribute "wized-variables" to the same element.
+//    - The value of this attribute should include the variable names, separated by commas.
+//    - The value for this attribute can be empty
+//
+// Example Usage:
+// - required-fields="demo_patentDescription_fileUpload_instructionsInput,home_orderForm_date_input,home_orderForm_patentSearchOption_option"
+// - wized-variables="variable1,variable2"
+//
+// Additional Behavior:
+// - The script ensures that when radio options are toggled, both the inputs and the associated Wized variable values are reset.
+
+
 window.Wized = window.Wized || [];
 window.Wized.push((Wized) => {
     /**
