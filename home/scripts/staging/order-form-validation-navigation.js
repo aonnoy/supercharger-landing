@@ -6,11 +6,19 @@ const waitForSwiper = () => {
   const swiper = getSwiperInstance();
   if (swiper) {
     console.log("Swiper instance found. Proceeding with navigation and validation setup...");
-    setupNavigation(swiper); // Pass the Swiper instance to the setup function
+    setupNavigation(swiper);
   } else {
     console.log("Swiper instance not ready yet. Retrying...");
     setTimeout(waitForSwiper, 500); // Retry after 500ms
   }
+};
+
+// Helper to validate and log results
+const validateFieldGroup = (groupName, validator, currentSlide) => {
+  console.log(`Validating ${groupName}...`);
+  const result = validator(currentSlide);
+  console.log(`${groupName} validation result: ${result}`);
+  return result;
 };
 
 // Validate radio inputs
@@ -106,12 +114,14 @@ const validateSelectInputs = (currentSlide) => {
 // Validate current slide
 const validateCurrentSlide = (swiper) => {
   const currentSlide = swiper.slides[swiper.activeIndex];
-  const isRadiosValid = validateRadios(currentSlide);
-  const isTextInputsValid = validateTextInputs(currentSlide);
-  const isTextareasValid = validateTextareas(currentSlide);
-  const isSelectsValid = validateSelectInputs(currentSlide);
+  const isRadiosValid = validateFieldGroup("Radios", validateRadios, currentSlide);
+  const isTextInputsValid = validateFieldGroup("Text Inputs", validateTextInputs, currentSlide);
+  const isTextareasValid = validateFieldGroup("Textareas", validateTextareas, currentSlide);
+  const isSelectsValid = validateFieldGroup("Selects", validateSelectInputs, currentSlide);
 
-  return isRadiosValid && isTextInputsValid && isTextareasValid && isSelectsValid;
+  const allValid = isRadiosValid && isTextInputsValid && isTextareasValid && isSelectsValid;
+  console.log(`Overall validation result for slide ${swiper.activeIndex + 1}: ${allValid}`);
+  return allValid;
 };
 
 const setupNavigation = (swiper) => {
@@ -169,3 +179,4 @@ const setupNavigation = (swiper) => {
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
+
