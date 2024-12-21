@@ -13,6 +13,7 @@ const waitForSwiper = () => {
   }
 };
 
+// Helper to validate and log results
 const validateFieldGroup = (groupName, validator, currentSlide) => {
   console.log(`Validating ${groupName}...`);
   const result = validator(currentSlide);
@@ -20,6 +21,7 @@ const validateFieldGroup = (groupName, validator, currentSlide) => {
   return result;
 };
 
+// Validate radio inputs
 const validateRadios = (currentSlide) => {
   const radios = currentSlide.querySelectorAll("input[type='radio']");
   
@@ -47,8 +49,75 @@ const validateRadios = (currentSlide) => {
   }
 };
 
-// Other validation functions remain unchanged...
+// Validate text inputs
+const validateTextInputs = (currentSlide) => {
+  const inputs = currentSlide.querySelectorAll("input[type='text'][required], input[type='email'][required], input[type='number'][required]");
+  let isValid = true;
 
+  inputs.forEach((input) => {
+    const errorElement = input.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+    if (!input.value.trim()) {
+      if (errorElement) {
+        errorElement.removeAttribute("custom-cloak"); // Show error
+      }
+      isValid = false;
+    } else {
+      if (errorElement) {
+        errorElement.setAttribute("custom-cloak", "true"); // Hide error
+      }
+    }
+  });
+
+  return isValid;
+};
+
+// Validate textareas
+const validateTextareas = (currentSlide) => {
+  const textareas = currentSlide.querySelectorAll("textarea[required]");
+  let isValid = true;
+
+  textareas.forEach((textarea) => {
+    const errorElement = textarea.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+    if (!textarea.value.trim()) {
+      console.warn(`Validation failed for textarea with id "${textarea.id}".`);
+      if (errorElement) {
+        errorElement.removeAttribute("custom-cloak"); // Show error
+      }
+      isValid = false;
+    } else {
+      console.log(`Textarea with id "${textarea.id}" is valid.`);
+      if (errorElement) {
+        errorElement.setAttribute("custom-cloak", "true"); // Hide error
+      }
+    }
+  });
+
+  return isValid;
+};
+
+// Validate select inputs
+const validateSelectInputs = (currentSlide) => {
+  const selects = currentSlide.querySelectorAll("select[required]");
+  let isValid = true;
+
+  selects.forEach((select) => {
+    const errorElement = select.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+    if (!select.value || select.value === "") {
+      if (errorElement) {
+        errorElement.removeAttribute("custom-cloak"); // Show error
+      }
+      isValid = false;
+    } else {
+      if (errorElement) {
+        errorElement.setAttribute("custom-cloak", "true"); // Hide error
+      }
+    }
+  });
+
+  return isValid;
+};
+
+// Validate current slide
 const validateCurrentSlide = (swiper) => {
   const currentSlide = swiper.slides[swiper.activeIndex];
   const isRadiosValid = validateFieldGroup("Radios", validateRadios, currentSlide);
@@ -116,4 +185,3 @@ const setupNavigation = (swiper) => {
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
-
