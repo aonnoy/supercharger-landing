@@ -13,34 +13,107 @@ const waitForSwiper = () => {
   }
 };
 
-const setupNavigation = (swiper) => {
-  console.log("Setting up navigation and validation handlers...");
+// Validate radio inputs
+const validateRadios = (currentSlide) => {
+  const radios = currentSlide.querySelectorAll("input[type='radio']");
+  const isRadioChecked = Array.from(radios).some((radio) => {
+    const parentLabel = radio.closest("label");
+    return parentLabel && parentLabel.querySelector(".w-radio-input").classList.contains("w--redirected-checked");
+  });
 
-  const validateCurrentSlide = () => {
-    // Get all radio inputs in the current slide
-    const currentSlide = swiper.slides[swiper.activeIndex];
-    const radios = currentSlide.querySelectorAll("input[type='radio']");
-    const errorElement = currentSlide.querySelector(".form-field_error");
+  const errorElement = currentSlide.querySelector(".form-field_error");
+  if (!isRadioChecked) {
+    if (errorElement) {
+      errorElement.removeAttribute("custom-cloak"); // Show error
+    }
+    return false;
+  } else {
+    if (errorElement) {
+      errorElement.setAttribute("custom-cloak", "true"); // Hide error
+    }
+    return true;
+  }
+};
 
-    // Check if at least one radio is selected
-    const isRadioChecked = Array.from(radios).some((radio) => {
-      const parentLabel = radio.closest("label");
-      return parentLabel && parentLabel.querySelector(".w-radio-input").classList.contains("w--redirected-checked");
-    });
+// Validate text inputs
+const validateTextInputs = (currentSlide) => {
+  const inputs = currentSlide.querySelectorAll("input[type='text'][required], input[type='email'][required], input[type='number'][required]");
+  let isValid = true;
 
-    if (!isRadioChecked) {
-      console.warn("Validation failed: No radio option selected.");
+  inputs.forEach((input) => {
+    const errorElement = input.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+    if (!input.value.trim()) {
       if (errorElement) {
         errorElement.removeAttribute("custom-cloak"); // Show error
       }
-      return false;
+      isValid = false;
     } else {
       if (errorElement) {
         errorElement.setAttribute("custom-cloak", "true"); // Hide error
       }
-      return true;
     }
-  };
+  });
+
+  return isValid;
+};
+
+// Validate textareas
+const validateTextareas = (currentSlide) => {
+  const textareas = currentSlide.querySelectorAll("textarea[required]");
+  let isValid = true;
+
+  textareas.forEach((textarea) => {
+    const errorElement = textarea.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+    if (!textarea.value.trim()) {
+      if (errorElement) {
+        errorElement.removeAttribute("custom-cloak"); // Show error
+      }
+      isValid = false;
+    } else {
+      if (errorElement) {
+        errorElement.setAttribute("custom-cloak", "true"); // Hide error
+      }
+    }
+  });
+
+  return isValid;
+};
+
+// Validate select inputs
+const validateSelectInputs = (currentSlide) => {
+  const selects = currentSlide.querySelectorAll("select[required]");
+  let isValid = true;
+
+  selects.forEach((select) => {
+    const errorElement = select.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+    if (!select.value || select.value === "") {
+      if (errorElement) {
+        errorElement.removeAttribute("custom-cloak"); // Show error
+      }
+      isValid = false;
+    } else {
+      if (errorElement) {
+        errorElement.setAttribute("custom-cloak", "true"); // Hide error
+      }
+    }
+  });
+
+  return isValid;
+};
+
+// Validate current slide
+const validateCurrentSlide = () => {
+  const currentSlide = swiper.slides[swiper.activeIndex];
+  const isRadiosValid = validateRadios(currentSlide);
+  const isTextInputsValid = validateTextInputs(currentSlide);
+  const isTextareasValid = validateTextareas(currentSlide);
+  const isSelectsValid = validateSelectInputs(currentSlide);
+
+  return isRadiosValid && isTextInputsValid && isTextareasValid && isSelectsValid;
+};
+
+const setupNavigation = (swiper) => {
+  console.log("Setting up navigation and validation handlers...");
 
   // Add event listener for "next" buttons
   document.querySelectorAll('[wized="home_orderForm_navigation_next"]').forEach((nextButton) => {
@@ -78,16 +151,12 @@ const setupNavigation = (swiper) => {
     swiper.updateAutoHeight(); // Automatically adjust height when the active slide changes
   });
 
-  // Add event listener for radio selection to hide error message
-  document.querySelectorAll("input[type='radio']").forEach((radio) => {
-    radio.addEventListener('change', () => {
-      const parentLabel = radio.closest("label");
-      if (parentLabel && parentLabel.querySelector(".w-radio-input").classList.contains("w--redirected-checked")) {
-        const currentSlide = swiper.slides[swiper.activeIndex];
-        const errorElement = currentSlide.querySelector(".form-field_error");
-        if (errorElement) {
-          errorElement.setAttribute("custom-cloak", "true"); // Hide error when a radio is selected
-        }
+  // Add event listener for all inputs to hide error message on interaction
+  document.querySelectorAll("input[type='radio'], input[type='text'], textarea, select").forEach((field) => {
+    field.addEventListener('change', () => {
+      const errorElement = field.closest(".form-field_wrapper")?.querySelector(".form-field_error");
+      if (errorElement) {
+        errorElement.setAttribute("custom-cloak", "true"); // Hide error on change
       }
     });
   });
@@ -98,7 +167,3 @@ const setupNavigation = (swiper) => {
 // Wait for Swiper instance to be ready
 waitForSwiper();
 
-
-  console.log("Navigation and validation handlers attached successfully.");
-// Wait for Swiper instance to be ready
-waitForSwiper();
