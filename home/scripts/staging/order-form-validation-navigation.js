@@ -12,64 +12,80 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("Swiper instance retrieved. Setting up navigation and validation...");
 
-  // Get navigation buttons
-  const nextButton = document.querySelector("[wized='home_orderForm_navigation_next']");
-  const prevButton = document.querySelector("[wized='home_orderForm_navigation_previous']");
+  // Get all "Next" and "Previous" buttons
+  const nextButtons = document.querySelectorAll("[wized='home_orderForm_navigation_next']");
+  const prevButtons = document.querySelectorAll("[wized='home_orderForm_navigation_previous']");
 
-  if (!nextButton || !prevButton) {
-    console.error("Navigation buttons not found. Ensure they are present in the DOM.");
+  if (nextButtons.length === 0) {
+    console.error("No 'Next' buttons found. Ensure they are present in the DOM.");
     return;
   }
 
-  // Add event listener for the "Next" button
-  nextButton.addEventListener("click", () => {
-    console.log("Next button clicked. Validating current slide...");
+  if (prevButtons.length === 0) {
+    console.error("No 'Previous' buttons found. Ensure they are present in the DOM.");
+    return;
+  }
 
-    const activeSlide = swiper.slides[swiper.activeIndex];
-    if (!activeSlide) {
-      console.error("No active slide found.");
-      return;
-    }
+  // Attach event listeners to all "Next" buttons
+  nextButtons.forEach((nextButton) => {
+    nextButton.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent default link behavior
+      console.log("Next button clicked. Validating current slide...");
 
-    console.log("Active slide found. Validating required fields...");
+      const activeSlide = swiper.slides[swiper.activeIndex];
+      if (!activeSlide) {
+        console.error("No active slide found.");
+        return;
+      }
 
-    // Check for required radio buttons on the current slide
-    const requiredRadios = activeSlide.querySelectorAll("input[type='radio'][wized='home_orderForm_selectProduct_radio'][required]");
-    const errorElement = activeSlide.querySelector(".form-field_error");
+      console.log("Active slide found. Validating required fields...");
 
-    let isValid = false;
+      // Validate radio buttons on the active slide
+      const requiredRadios = activeSlide.querySelectorAll(
+        "input[type='radio'][wized='home_orderForm_selectProduct_radio']"
+      );
+      const errorElement = activeSlide.querySelector(".form-field_error");
 
-    requiredRadios.forEach((radio) => {
-      // Check if the radio button is selected
-      if (radio.classList.contains("w--redirected-checked")) {
-        isValid = true;
+      let isValid = false;
+
+      requiredRadios.forEach((radio) => {
+        // Check if the radio button is selected
+        if (radio.checked) {
+          console.log(`Radio button with value '${radio.value}' is selected.`);
+          isValid = true;
+        }
+      });
+
+      if (!isValid) {
+        console.warn("Validation failed. Showing error message...");
+
+        // Show the error element by removing the "custom-cloak" attribute
+        if (errorElement) {
+          errorElement.removeAttribute("custom-cloak");
+          console.log("Error message displayed.");
+        }
+      } else {
+        console.log("Validation passed. Proceeding to the next slide...");
+
+        // Hide the error element if it was previously shown
+        if (errorElement) {
+          errorElement.setAttribute("custom-cloak", "true");
+          console.log("Error message hidden.");
+        }
+
+        // Navigate to the next slide
+        swiper.slideNext();
       }
     });
-
-    if (!isValid) {
-      console.warn("Validation failed. Showing error message...");
-
-      // Show the error element by removing the "custom-cloak" attribute
-      if (errorElement) {
-        errorElement.removeAttribute("custom-cloak");
-      }
-    } else {
-      console.log("Validation passed. Proceeding to the next slide...");
-
-      // Hide the error element if it was previously shown
-      if (errorElement) {
-        errorElement.setAttribute("custom-cloak", "true");
-      }
-
-      // Navigate to the next slide
-      swiper.slideNext();
-    }
   });
 
-  // Add event listener for the "Previous" button
-  prevButton.addEventListener("click", () => {
-    console.log("Previous button clicked. Moving to the previous slide...");
-    swiper.slidePrev();
+  // Attach event listeners to all "Previous" buttons
+  prevButtons.forEach((prevButton) => {
+    prevButton.addEventListener("click", (event) => {
+      event.preventDefault(); // Prevent default link behavior
+      console.log("Previous button clicked. Moving to the previous slide...");
+      swiper.slidePrev();
+    });
   });
 
   // Add event listener to toggle the error message visibility when a radio is selected
@@ -83,6 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Hide the error element when a radio button is selected
       if (errorElement) {
         errorElement.setAttribute("custom-cloak", "true");
+        console.log("Error message hidden.");
       }
     }
   });
