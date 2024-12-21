@@ -32,5 +32,5 @@ console.log('datepicker function is loaded');
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/jurisdictions-select.js';
 console.log('jurisdictions select function is loaded');
 
-import 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-validation-navigation.js';
+import 'https://supercharger-staging.vercel.app/home/test.js';
 console.log('Order form validation & navigation is loaded');
