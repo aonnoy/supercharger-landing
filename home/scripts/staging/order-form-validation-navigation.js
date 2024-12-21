@@ -23,7 +23,10 @@ const setupNavigation = (swiper) => {
     const errorElement = currentSlide.querySelector(".form-field_error");
 
     // Check if at least one radio is selected
-    const isRadioChecked = Array.from(radios).some((radio) => radio.classList.contains("w--redirected-checked"));
+    const isRadioChecked = Array.from(radios).some((radio) => {
+      const parentLabel = radio.closest("label");
+      return parentLabel && parentLabel.querySelector(".w-radio-input").classList.contains("w--redirected-checked");
+    });
 
     if (!isRadioChecked) {
       console.warn("Validation failed: No radio option selected.");
@@ -78,13 +81,23 @@ const setupNavigation = (swiper) => {
   // Add event listener for radio selection to hide error message
   document.querySelectorAll("input[type='radio']").forEach((radio) => {
     radio.addEventListener('change', () => {
-      const currentSlide = swiper.slides[swiper.activeIndex];
-      const errorElement = currentSlide.querySelector(".form-field_error");
-      if (errorElement) {
-        errorElement.setAttribute("custom-cloak", "true"); // Hide error when a radio is selected
+      const parentLabel = radio.closest("label");
+      if (parentLabel && parentLabel.querySelector(".w-radio-input").classList.contains("w--redirected-checked")) {
+        const currentSlide = swiper.slides[swiper.activeIndex];
+        const errorElement = currentSlide.querySelector(".form-field_error");
+        if (errorElement) {
+          errorElement.setAttribute("custom-cloak", "true"); // Hide error when a radio is selected
+        }
       }
     });
   });
+
+  console.log("Navigation and validation handlers attached successfully.");
+};
+
+// Wait for Swiper instance to be ready
+waitForSwiper();
+
 
   console.log("Navigation and validation handlers attached successfully.");
 };
