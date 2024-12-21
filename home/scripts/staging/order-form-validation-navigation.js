@@ -1,7 +1,7 @@
 // Define navigation and validation for the order form
 import { getSwiperInstance } from 'https://supercharger-staging.vercel.app/home/scripts/staging/swiper-order-form.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+const initializeNavigation = () => {
   const swiper = getSwiperInstance();
 
   if (!swiper) {
@@ -85,4 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   });
-});
+};
+
+// Directly invoke the initialization function
+initializeNavigation();
+
