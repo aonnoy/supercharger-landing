@@ -16,12 +16,18 @@ const waitForSwiper = () => {
 const setupNavigation = (swiper) => {
   console.log("Setting up navigation handlers...");
 
+  const adjustHeight = () => {
+    swiper.updateAutoHeight(0); // Adjust height for the current slide
+    console.log("Swiper height updated for the current slide.");
+  };
+
   // Add event listener for "next" buttons
   document.querySelectorAll('[wized="home_orderForm_navigation_next"]').forEach((nextButton) => {
     nextButton.addEventListener('click', () => {
       if (swiper.activeIndex < swiper.slides.length - 1) {
         swiper.slideNext();
         console.log(`Navigated to slide ${swiper.activeIndex + 2}.`);
+        adjustHeight(); // Adjust height after navigation
       } else {
         console.warn("Already on the last slide.");
       }
@@ -34,10 +40,17 @@ const setupNavigation = (swiper) => {
       if (swiper.activeIndex > 0) {
         swiper.slidePrev();
         console.log(`Navigated to slide ${swiper.activeIndex}.`);
+        adjustHeight(); // Adjust height after navigation
       } else {
         console.warn("Already on the first slide.");
       }
     });
+  });
+
+  // Adjust height on slide change event
+  swiper.on('slideChange', () => {
+    console.log("Slide changed. Updating height...");
+    adjustHeight();
   });
 
   console.log("Navigation handlers attached successfully.");
@@ -45,3 +58,4 @@ const setupNavigation = (swiper) => {
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
+
