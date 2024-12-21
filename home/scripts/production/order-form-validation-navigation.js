@@ -1,4 +1,4 @@
-import { getSwiperInstance } from 'https://supercharger-staging.vercel.app/home/scripts/staging/swiper-order-form.js';
+import { getSwiperInstance } from 'https://supercharger-staging.vercel.app/home/scripts/production/swiper-order-form.js';
 
 console.log("Swiper navigation script with validation initialized.");
 
