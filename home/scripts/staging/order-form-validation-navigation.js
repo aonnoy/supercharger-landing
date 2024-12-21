@@ -169,4 +169,3 @@ const setupNavigation = (swiper) => {
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
-
