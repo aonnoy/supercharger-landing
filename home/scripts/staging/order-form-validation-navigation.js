@@ -6,7 +6,7 @@ const waitForSwiper = () => {
   const swiper = getSwiperInstance();
   if (swiper) {
     console.log("Swiper instance found. Proceeding with navigation and validation setup...");
-    setupNavigation(swiper); // Call navigation and validation setup logic
+    setupNavigation(swiper); // Pass the Swiper instance to the setup function
   } else {
     console.log("Swiper instance not ready yet. Retrying...");
     setTimeout(waitForSwiper, 500); // Retry after 500ms
@@ -102,7 +102,7 @@ const validateSelectInputs = (currentSlide) => {
 };
 
 // Validate current slide
-const validateCurrentSlide = () => {
+const validateCurrentSlide = (swiper) => {
   const currentSlide = swiper.slides[swiper.activeIndex];
   const isRadiosValid = validateRadios(currentSlide);
   const isTextInputsValid = validateTextInputs(currentSlide);
@@ -118,7 +118,7 @@ const setupNavigation = (swiper) => {
   // Add event listener for "next" buttons
   document.querySelectorAll('[wized="home_orderForm_navigation_next"]').forEach((nextButton) => {
     nextButton.addEventListener('click', () => {
-      if (validateCurrentSlide()) {
+      if (validateCurrentSlide(swiper)) {
         if (swiper.activeIndex < swiper.slides.length - 1) {
           swiper.slideNext();
           console.log(`Navigated to slide ${swiper.activeIndex + 2}.`);
@@ -162,7 +162,6 @@ const setupNavigation = (swiper) => {
   });
 
   console.log("Navigation and validation handlers attached successfully.");
-};
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
