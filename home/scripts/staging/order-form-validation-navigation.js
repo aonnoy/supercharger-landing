@@ -65,11 +65,13 @@ const validateTextareas = (currentSlide) => {
   textareas.forEach((textarea) => {
     const errorElement = textarea.closest(".form-field_wrapper")?.querySelector(".form-field_error");
     if (!textarea.value.trim()) {
+      console.warn(`Validation failed for textarea with id "${textarea.id}".`);
       if (errorElement) {
         errorElement.removeAttribute("custom-cloak"); // Show error
       }
       isValid = false;
     } else {
+      console.log(`Textarea with id "${textarea.id}" is valid.`);
       if (errorElement) {
         errorElement.setAttribute("custom-cloak", "true"); // Hide error
       }
@@ -153,9 +155,10 @@ const setupNavigation = (swiper) => {
 
   // Add event listener for all inputs to hide error message on interaction
   document.querySelectorAll("input[type='radio'], input[type='text'], textarea, select").forEach((field) => {
-    field.addEventListener('change', () => {
+    field.addEventListener('input', () => { // Use 'input' for real-time updates
       const errorElement = field.closest(".form-field_wrapper")?.querySelector(".form-field_error");
-      if (errorElement) {
+      if (errorElement && field.value.trim() !== "") {
+        console.log(`Error hidden for field with id "${field.id}".`);
         errorElement.setAttribute("custom-cloak", "true"); // Hide error on change
       }
     });
@@ -166,3 +169,4 @@ const setupNavigation = (swiper) => {
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
+
