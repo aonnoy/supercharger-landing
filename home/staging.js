@@ -11,7 +11,7 @@ console.log('Swiper order form script loaded!');
 // *******************************************************
 // Selectors: .product-selection_radio-select
 // Combo Class: .is-active
-import 'https://supercharger-staging.vercel.app/home/scripts/staging/product-selection-radio-hover.js';
+import `${baseUrl}/home/scripts/staging/product-selection-radio-hover.js`;
 console.log('Product selection hover and clicked function loaded');
 
 // *******************************************************
