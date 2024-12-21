@@ -1,46 +1,47 @@
-// Define simple navigation for the order form
 import { getSwiperInstance } from 'https://supercharger-staging.vercel.app/home/scripts/staging/swiper-order-form.js';
 
-// Wait for the DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', () => {
-  // Retrieve the Swiper instance
-  const swiperInstance = getSwiperInstance();
+console.log("Swiper navigation script initialized.");
 
-  // Check if the Swiper instance is available
-  if (!swiperInstance) {
-    console.error("Swiper instance is not initialized yet.");
-    return;
+const waitForSwiper = () => {
+  const swiper = getSwiperInstance();
+  if (swiper) {
+    console.log("Swiper instance found. Proceeding with navigation setup...");
+    setupNavigation(swiper); // Call navigation setup logic
+  } else {
+    console.log("Swiper instance not ready yet. Retrying...");
+    setTimeout(waitForSwiper, 500); // Retry after 500ms
   }
+};
 
-  console.log("Swiper navigation handler initialized.");
+const setupNavigation = (swiper) => {
+  console.log("Setting up navigation handlers...");
 
-  // Add event listener for the "next" buttons
+  // Add event listener for "next" buttons
   document.querySelectorAll('[wized="home_orderForm_navigation_next"]').forEach((nextButton) => {
     nextButton.addEventListener('click', () => {
-      console.log("Next button clicked.");
-
-      // Move to the next slide
-      if (swiperInstance.activeIndex < swiperInstance.slides.length - 1) {
-        swiperInstance.slideNext();
-        console.log(`Navigated to slide ${swiperInstance.activeIndex + 2}.`); // Swiper uses zero-based indexing
+      if (swiper.activeIndex < swiper.slides.length - 1) {
+        swiper.slideNext();
+        console.log(`Navigated to slide ${swiper.activeIndex + 2}.`);
       } else {
         console.warn("Already on the last slide.");
       }
     });
   });
 
-  // Add event listener for the "previous" buttons
+  // Add event listener for "previous" buttons
   document.querySelectorAll('[wized="home_orderForm_navigation_previous"]').forEach((prevButton) => {
     prevButton.addEventListener('click', () => {
-      console.log("Previous button clicked.");
-
-      // Move to the previous slide
-      if (swiperInstance.activeIndex > 0) {
-        swiperInstance.slidePrev();
-        console.log(`Navigated to slide ${swiperInstance.activeIndex}.`); // Swiper uses zero-based indexing
+      if (swiper.activeIndex > 0) {
+        swiper.slidePrev();
+        console.log(`Navigated to slide ${swiper.activeIndex}.`);
       } else {
         console.warn("Already on the first slide.");
       }
     });
   });
-});
+
+  console.log("Navigation handlers attached successfully.");
+};
+
+// Wait for Swiper instance to be ready
+waitForSwiper();
