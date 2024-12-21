@@ -51,12 +51,7 @@ Promise.all([
               spaceBetween: 0, // No spacing between slides
               allowTouchMove: false, // Prevent manual swiping
               autoHeight: true, // Automatically adjust height based on content
-              effect: 'fade',
-              fadeEffect: { crossFade: true },
-              navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              },
+              effect: 'fade',,
             });
 
             console.log("Swiper initialized successfully.");
