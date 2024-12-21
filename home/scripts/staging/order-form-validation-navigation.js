@@ -162,7 +162,7 @@ const setupNavigation = (swiper) => {
   });
 
   console.log("Navigation and validation handlers attached successfully.");
+};
 
 // Wait for Swiper instance to be ready
 waitForSwiper();
-
