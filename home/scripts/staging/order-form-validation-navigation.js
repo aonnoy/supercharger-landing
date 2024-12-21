@@ -13,14 +13,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[wized="home_orderForm_navigation_next"]').forEach((nextButton) => {
     nextButton.addEventListener('click', () => {
       const currentSlide = document.querySelector('.swiper-slide-active');
+      if (!currentSlide) {
+        console.error('No active slide found.');
+        return;
+      }
+
       const requiredRadios = currentSlide.querySelectorAll('input[type="radio"][required]');
       const errorElements = currentSlide.querySelectorAll('.form-field_error');
 
       let allValid = true;
 
-      requiredRadios.forEach((radio, index) => {
-        const isChecked = radio.parentElement.querySelector('.w--redirected-checked');
-        const errorElement = errorElements[index];
+      requiredRadios.forEach((radio) => {
+        const isChecked = radio.closest('label').querySelector('.w--redirected-checked');
+        const errorElement = radio.closest('.order-form_product-selection').querySelector('.form-field_error');
 
         if (!isChecked) {
           allValid = false;
