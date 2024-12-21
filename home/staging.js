@@ -34,6 +34,3 @@ console.log('jurisdictions select function is loaded');
 
 import 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-validation-navigation.js';
 console.log('Order form validation & navigation is loaded');
-
-import 'https://supercharger-staging.vercel.app/home/scripts/staging/order-form-autoheight.js';
-console.log('Order form auto height is loaded');
