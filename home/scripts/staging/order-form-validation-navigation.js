@@ -16,8 +16,8 @@ const initializeNavigation = () => {
     console.log(`Adding click listener to Next button ${btnIndex + 1}`);
 
     nextButton.addEventListener('click', () => {
-      console.log(`Next button ${btnIndex + 1} clicked. Moving to the next slide.`);
-      swiper.slideNext();
+      console.log(`Next button ${btnIndex + 1} clicked. Calling Swiper API to move to the next slide.`);
+      swiper.slideTo(swiper.activeIndex + 1);
     });
   });
 
@@ -26,8 +26,8 @@ const initializeNavigation = () => {
     console.log(`Adding click listener to Previous button ${btnIndex + 1}`);
 
     prevButton.addEventListener('click', () => {
-      console.log(`Previous button ${btnIndex + 1} clicked. Moving to the previous slide.`);
-      swiper.slidePrev();
+      console.log(`Previous button ${btnIndex + 1} clicked. Calling Swiper API to move to the previous slide.`);
+      swiper.slideTo(swiper.activeIndex - 1);
     });
   });
 };
